@@ -1,0 +1,38 @@
+{
+    "name": "vendor/my-ext",
+    "type": "typo3-cms-extension",
+    "description": "Your description goes here.",
+    "keywords": [
+        "TYPO3 CMS",
+        "Extension",
+        "Example",
+        "DDEV"
+    ],
+    "homepage": "https://github.com/a-r-m-i-n/ddev-for-typo3-extensions",
+    "license": "GPL-2.0-or-later",
+    "authors": [
+        {
+            "name": "Armin Vieweg",
+            "role": "Developer",
+            "email": "info@v.ieweg.de",
+            "homepage": "https://v.ieweg.de"
+        }
+    ],
+    "require": {
+        "php": ">=8.2",
+        "typo3/cms-core": "^11.5 || ^12.4 || ^13"
+    },
+    "autoload": {
+        "psr-4": {
+            "Vendor\\MyExt\\": "Classes"
+        }
+    },
+    "replace": {
+        "typo3-ter/my_ext": "*"
+    },
+    "extra": {
+        "typo3/cms": {
+            "extension-key": "my_ext"
+        }
+    }
+}
