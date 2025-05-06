@@ -1,4 +1,4 @@
-name: my-ext
+name: vici
 type: php
 docroot: ""
 no_project_mount: true
@@ -9,9 +9,9 @@ router_http_port: "80"
 router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames:
-    - docs.my-ext
-    - v11.my-ext
-    - v12.my-ext
-    - v13.my-ext
+    - docs.vici
+    - v11.vici
+    - v12.vici
+    - v13.vici
 additional_fqdns: []
 use_dns_when_possible: true

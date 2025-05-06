@@ -1,8 +1,8 @@
 ARG BASE_IMAGE
 FROM $BASE_IMAGE
 
-ENV EXTENSION_KEY "my_ext"
-ENV DDEV_SITENAME "my-ext"
+ENV EXTENSION_KEY "vici"
+ENV DDEV_SITENAME "vici"
 
 RUN echo "<html><head><style>h2 {display:inline-block;margin-right:0.5em;vertical-align:middle;}</style></head>" > /var/www/html/index.html
 RUN echo "<body><h1>EXT:${EXTENSION_KEY} Dev Environments</h1><ul>" >> /var/www/html/index.html

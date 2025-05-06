@@ -10,7 +10,7 @@ Example Extension (for DDEV for TYPO3 extensions)
 .. only:: html
 
 	:Classification:
-		my-ext
+		vici
 
 	:Version:
 		|release|

@@ -1,11 +1,11 @@
 {
-    "name": "vendor/my-ext",
+    "name": "t3/vici",
     "type": "typo3-cms-extension",
-    "description": "Your description goes here.",
+    "description": "Versatile Interface for Custom Information - TYPO3 extension to define, manage and output custom data structures using TCA",
     "keywords": [
         "TYPO3 CMS",
         "Extension",
-        "Example",
+        "vici",
         "DDEV"
     ],
     "homepage": "https://github.com/a-r-m-i-n/ddev-for-typo3-extensions",
@@ -24,15 +24,15 @@
     },
     "autoload": {
         "psr-4": {
-            "Vendor\\MyExt\\": "Classes"
+            "T3\\Vici\\": "Classes"
         }
     },
     "replace": {
-        "typo3-ter/my_ext": "*"
+        "typo3-ter/vici": "*"
     },
     "extra": {
         "typo3/cms": {
-            "extension-key": "my_ext"
+            "extension-key": "vici"
         }
     }
 }
