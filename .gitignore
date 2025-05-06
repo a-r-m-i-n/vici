@@ -1,2 +1,6 @@
 /.idea/
 /Documentation-GENERATED-temp/
+/vendor
+/public
+/composer.lock
+/.php-cs-fixer.cache

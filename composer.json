@@ -22,6 +22,14 @@
         "php": ">=8.2",
         "typo3/cms-core": "^13.4"
     },
+    "require-dev": {
+        "armin/editorconfig-cli": "^2.0",
+        "friendsofphp/php-cs-fixer": "^3.75",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-doctrine": "^2.0",
+        "saschaegerer/phpstan-typo3": "^2.1",
+        "helmich/typo3-typoscript-lint": "^3.3"
+    },
     "autoload": {
         "psr-4": {
             "T3\\Vici\\": "Classes"
@@ -33,6 +41,33 @@
     "extra": {
         "typo3/cms": {
             "extension-key": "vici"
+        }
+    },
+    "scripts": {
+        "check": [
+            "@editorconfig-check",
+            "@phpcs",
+            "@phpstan",
+            "@typoscript-lint",
+            "@composer validate --strict --no-check-version --no-check-all --no-check-publish"
+        ],
+        "fix": [
+            "@editorconfig-fix",
+            "@phpcs:fix",
+            "@phpstan",
+            "@typoscript-lint"
+        ],
+        "editorconfig-check": "ec -g -u",
+        "editorconfig-fix": "ec -g --fix",
+        "phpcs": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --config .build/php-cs-fixer.php --ansi --verbose --diff --dry-run -- Classes Configuration/TCA",
+        "phpcs:fix": "PHP_CS_FIXER_IGNORE_ENV=1 php-cs-fixer fix --config .build/php-cs-fixer.php --ansi -- Classes Configuration/TCA",
+        "phpstan": "phpstan analyse -c .build/phpstan.neon -l 8 -- Classes Configuration/TCA",
+        "typoscript-lint": "typoscript-lint --fail-on-warnings -c .build/typoscript-lint.yaml -- Configuration"
+    },
+    "config": {
+        "allow-plugins": {
+            "typo3/cms-composer-installers": true,
+            "typo3/class-alias-loader": true
         }
     }
 }
