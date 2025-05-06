@@ -5,3 +5,9 @@ Based on TYPO3's TCA configuration, new database tables and backend interfaces c
 with full frontend output capabilities.
 
 No programming skills are required.
+
+
+## Requirements
+
+* PHP 8.2+
+* TYPO3 13.4 LTS

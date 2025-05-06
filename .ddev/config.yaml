@@ -10,8 +10,6 @@ router_https_port: "443"
 xdebug_enabled: false
 additional_hostnames:
     - docs.vici
-    - v11.vici
-    - v12.vici
     - v13.vici
 additional_fqdns: []
 use_dns_when_possible: true
