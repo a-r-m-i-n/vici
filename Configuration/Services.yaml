@@ -1,0 +1,14 @@
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        public: false
+
+    T3\Vici\:
+        resource: '../Classes/*'
+        exclude:
+            - '../Classes/Domain/Model/*'
+
+    T3\Vici\UserFunction\ItemsProcFunc\:
+        resource: '../Classes/UserFunction/ItemsProcFunc/*'
+        public: true
