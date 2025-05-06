@@ -5,10 +5,9 @@ use T3\Vici\UserFunction\TcaFieldValidator\LeadingLetterValidator;
 
 return [
     'ctrl' => [
-        'title' => 'Table / Record type',
+        'title' => 'Table',
         'label' => 'name',
-        'adminOnly' => true,
-        'rootLevel' => 1,
+        'rootLevel' => -1,
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'versioningWS' => true,
@@ -21,16 +20,19 @@ return [
         'typeicon_classes' => [
             'default' => 'mimetypes-x-content-table',
         ],
+        'security' => [
+            'ignoreRootLevelRestriction' => false,
+        ],
         'copyAfterDuplFields' => 'columns',
     ],
     'types' => [
         0 => [
             'showitem' => <<<TXT
                 --div--;General,
-                name,columns,
+                name,columns,label,
 
-                --div--;Icon,
-                icon,
+                --div--;Appearance,
+                title,icon,
                 TXT,
         ],
     ],
@@ -50,7 +52,6 @@ return [
                 'placeholder' => 'new_table_name',
             ],
         ],
-
         'columns' => [
             'exclude' => false,
             'label' => 'Columns',
@@ -69,7 +70,32 @@ return [
                 ],
             ],
         ],
-
+        'label' => [
+            'exclude' => false,
+            'label' => 'Label',
+            'description' => 'Column used for the label of this record (in list view)',
+            'displayCond' => 'FIELD:columns:>:0',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'foreign_table' => 'tx_vici_table_column',
+                'foreign_table_where' => 'AND tx_vici_table_column.parent=###THIS_UID### ORDER BY tx_vici_table_column.sorting',
+                'minitems' => 0,
+                'maxitems' => 1,
+                'allowNonIdValues' => true,
+            ],
+        ],
+        'title' => [
+            'exclude' => false,
+            'label' => 'Title',
+            'description' => 'Title of the table, being displayed in backend',
+            'config' => [
+                'type' => 'input',
+                'size' => 30,
+                'required' => false,
+                'eval' => 'trim',
+            ],
+        ],
         'icon' => [
             'exclude' => false,
             'label' => 'Icon',
@@ -79,6 +105,7 @@ return [
                 'minitems' => 1,
                 'maxitems' => 1,
                 'itemsProcFunc' => Icons::class . '->getAvailableIcons',
+                'default' => 'content-database',
                 'fieldWizard' => [
                     'selectIcons' => [
                         'disabled' => false,

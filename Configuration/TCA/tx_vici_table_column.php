@@ -15,8 +15,7 @@ return [
         'title' => 'Table column',
         'label' => 'name',
         'hideTable' => true,
-        'adminOnly' => true,
-        'rootLevel' => 1,
+        'rootLevel' => -1,
         'tstamp' => 'tstamp',
         'crdate' => 'crdate',
         'versioningWS' => true,
@@ -29,6 +28,7 @@ return [
         'type' => 'type',
         'typeicon_column' => 'type',
         'typeicon_classes' => [
+            'default' => 'form-hidden',
             'input' => 'form-text',
             'text' => 'form-textarea',
             'select' => 'form-single-select',

@@ -11,3 +11,8 @@ No programming skills are required.
 
 * PHP 8.2+
 * TYPO3 13.4 LTS
+
+
+## Development Roadmap
+
+* [ ] Configurable Palettes and Types

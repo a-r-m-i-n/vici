@@ -12,3 +12,12 @@ services:
     T3\Vici\UserFunction\ItemsProcFunc\:
         resource: '../Classes/UserFunction/ItemsProcFunc/*'
         public: true
+
+    T3\Vici\Hook\TcemainHook:
+        public: true
+
+    T3\Vici\Generator\TcaManager:
+        public: true
+
+    T3\Vici\Repository\ViciRepository:
+        lazy: true
