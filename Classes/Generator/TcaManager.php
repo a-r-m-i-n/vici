@@ -61,11 +61,12 @@ class TcaManager
             <?php
             $generationInfoComment
 
-            \$GLOBALS['TCA']['$tableName']['ctrl'] = $ctrlCode;
-            \$GLOBALS['TCA']['$tableName']['palettes'] = $palettesCode;
-            \$GLOBALS['TCA']['$tableName']['types'] = $typesCode;
-            \$GLOBALS['TCA']['$tableName']['columns'] = $columnsCode;
-
+            return array(
+              'ctrl' => $ctrlCode,
+              'palettes' => $palettesCode,
+              'types' => $typesCode,
+              'columns' => $columnsCode,
+            );
             PHP, true);
     }
 
@@ -84,11 +85,14 @@ class TcaManager
         }
     }
 
-    public function load(): void
+    /**
+     * @return array<string, mixed> Key is the table name, value the generated TCA
+     */
+    public function load(): array
     {
         $path = Environment::getVarPath() . '/cache/code/vici/';
         if (!file_exists($path)) {
-            return;
+            return [];
         }
 
         $finder = new Finder();
@@ -97,8 +101,11 @@ class TcaManager
             ->name('tx_vici_custom_*.php')
         ;
 
+        $loadedTca = [];
         foreach ($files as $file) {
-            require_once $file->getRealPath();
+            $loadedTca[$file->getFilenameWithoutExtension()] = require $file->getRealPath();
         }
+
+        return $loadedTca;
     }
 }
