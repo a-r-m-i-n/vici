@@ -70,14 +70,16 @@ class TcaManager
             PHP, true);
     }
 
-    public function delete(int $uid): void
+    public function delete(int|string $uidOrTableName): void
     {
-        $table = $this->repository->findTableByUid($uid);
-        if (!$table) {
-            throw new \UnexpectedValueException('No "tx_vici_table" entry found with uid ' . $uid);
+        $tableName = self::TABLE_PREFIX . $uidOrTableName;
+        if (is_int($uidOrTableName)) {
+            $table = $this->repository->findTableByUid($uidOrTableName);
+            if (!$table) {
+                throw new \UnexpectedValueException('No "tx_vici_table" entry found with uid ' . $uidOrTableName);
+            }
+            $tableName = self::TABLE_PREFIX . $table['name'];
         }
-
-        $tableName = self::TABLE_PREFIX . $table['name'];
         $destinationPath = Environment::getVarPath() . '/cache/code/vici/' . $tableName . '.php';
 
         if (file_exists($destinationPath)) {

@@ -5,25 +5,43 @@ namespace T3\Vici\Hook;
 use T3\Vici\Generator\TcaManager;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 
-readonly class TcemainHook
+class TcemainHook
 {
-    public function __construct(private TcaManager $tcaManager)
+    /** @var array<int, string> Key is UID of table, value the old table name */
+    private array $renamedTables = [];
+
+    public function __construct(private readonly TcaManager $tcaManager)
     {
     }
 
     /**
      * @param array<string, mixed> $fieldArray
      */
-    public function processDatamap_afterDatabaseOperations(
-        string $status,
-        string $table,
-        string|int $id,
-        array $fieldArray,
-        DataHandler $dataHandler
-    ): void {
+    public function processDatamap_postProcessFieldArray(string $status, string $table, string|int $id, array $fieldArray, DataHandler $dataHandler): void
+    {
+        if ('tx_vici_table' === $table && 'update' === $status && array_key_exists('name', $fieldArray)) {
+            $originalRow = $dataHandler->recordInfo($table, (int)$id) ?? [];
 
+            if (array_key_exists('name', $originalRow) && $originalRow['name'] !== $fieldArray['name']) {
+                $this->renamedTables[(int)$id] = $originalRow['name'];
+            }
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $fieldArray
+     */
+    public function processDatamap_afterDatabaseOperations(string $status, string $table, string|int $id, array $fieldArray, DataHandler $dataHandler): void
+    {
         $uid = $this->getUid($id, $table, $status, $dataHandler);
         if ('tx_vici_table' === $table) {
+            if (!empty($this->renamedTables)) {
+                foreach ($this->renamedTables as $uid => $oldName) {
+                    $this->tcaManager->delete($oldName);
+                }
+                $this->renamedTables = [];
+            }
+
             $this->tcaManager->generate($uid, $status);
         }
     }
