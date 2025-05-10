@@ -1,8 +1,8 @@
 <?php
 
-namespace T3\Vici\Generator\Tca;
+namespace T3\Vici\Generator;
 
-abstract class AbstractTcaGenerator
+abstract class AbstractPhpCodeGenerator
 {
     /**
      * @param array<string, mixed>             $table

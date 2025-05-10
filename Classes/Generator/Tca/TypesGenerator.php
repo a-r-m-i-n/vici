@@ -2,7 +2,9 @@
 
 namespace T3\Vici\Generator\Tca;
 
-class TypesGenerator extends AbstractTcaGenerator
+use T3\Vici\Generator\AbstractPhpCodeGenerator;
+
+class TypesGenerator extends AbstractPhpCodeGenerator
 {
     protected function generatePhpCode(): string
     {

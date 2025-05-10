@@ -2,6 +2,7 @@
 
 namespace T3\Vici\Generator\Tca\FieldTypes;
 
+use T3\Vici\Generator\Extbase\PropertyValue;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 abstract class AbstractFieldType
@@ -83,4 +84,9 @@ abstract class AbstractFieldType
      * @return array<string, mixed>
      */
     abstract public function buildTcaConfig(array $tableColumn): array;
+
+    /**
+     * @param array<string, mixed> $tableColumn
+     */
+    abstract public function buildExtbaseModelProperty(array $tableColumn): PropertyValue;
 }

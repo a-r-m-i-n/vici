@@ -20,4 +20,8 @@ services:
         public: true
 
     T3\Vici\Repository\ViciRepository:
+        public: true
         lazy: true
+
+    T3\Vici\Generator\ProxyClassLoader:
+        public: true

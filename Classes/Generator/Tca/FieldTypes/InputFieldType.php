@@ -2,6 +2,7 @@
 
 namespace T3\Vici\Generator\Tca\FieldTypes;
 
+use T3\Vici\Generator\Extbase\PropertyValue;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class InputFieldType extends AbstractFieldType
@@ -185,5 +186,12 @@ class InputFieldType extends AbstractFieldType
         }
 
         return $tcaConfig;
+    }
+
+    public function buildExtbaseModelProperty(array $tableColumn): PropertyValue
+    {
+        $name = GeneralUtility::underscoredToLowerCamelCase($tableColumn['name']);
+
+        return new PropertyValue($name, 'string');
     }
 }

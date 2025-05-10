@@ -2,7 +2,7 @@
 
 namespace T3\Vici\EventListener;
 
-use T3\Vici\Generator\TcaManager;
+use T3\Vici\Generator\TcaLoader;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\Event\BeforeTcaOverridesEvent;
 
@@ -12,7 +12,7 @@ use TYPO3\CMS\Core\Configuration\Event\BeforeTcaOverridesEvent;
 readonly class BeforeTcaOverridesEventListener
 {
     public function __construct(
-        private TcaManager $tcaManager,
+        private TcaLoader $tcaLoader,
     ) {
     }
 
@@ -20,9 +20,7 @@ readonly class BeforeTcaOverridesEventListener
     {
         $tca = $event->getTca();
 
-        $generatedTca = $this->tcaManager->load();
-
-        foreach ($generatedTca as $tableName => $tcaConfig) {
+        foreach (($this->tcaLoader)() as $tableName => $tcaConfig) {
             if (is_array($tcaConfig)) {
                 $tca[$tableName] = $tcaConfig;
             }

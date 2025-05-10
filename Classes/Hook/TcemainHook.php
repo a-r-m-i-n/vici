@@ -2,7 +2,8 @@
 
 namespace T3\Vici\Hook;
 
-use T3\Vici\Generator\TcaManager;
+use T3\Vici\Generator\ViciManager;
+use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\DataHandling\DataHandler;
 
 class TcemainHook
@@ -10,7 +11,7 @@ class TcemainHook
     /** @var array<int, string> Key is UID of table, value the old table name */
     private array $renamedTables = [];
 
-    public function __construct(private readonly TcaManager $tcaManager)
+    public function __construct(private readonly ViciManager $viciManager)
     {
     }
 
@@ -19,7 +20,7 @@ class TcemainHook
      */
     public function processDatamap_postProcessFieldArray(string $status, string $table, string|int $id, array $fieldArray, DataHandler $dataHandler): void
     {
-        if ('tx_vici_table' === $table && 'update' === $status && array_key_exists('name', $fieldArray)) {
+        if (ViciRepository::TABLENAME_TABLE === $table && 'update' === $status && array_key_exists('name', $fieldArray)) {
             $originalRow = $dataHandler->recordInfo($table, (int)$id) ?? [];
 
             if (array_key_exists('name', $originalRow) && $originalRow['name'] !== $fieldArray['name']) {
@@ -34,30 +35,22 @@ class TcemainHook
     public function processDatamap_afterDatabaseOperations(string $status, string $table, string|int $id, array $fieldArray, DataHandler $dataHandler): void
     {
         $uid = $this->getUid($id, $table, $status, $dataHandler);
-        if ('tx_vici_table' === $table) {
+        if (ViciRepository::TABLENAME_TABLE === $table) {
             if (!empty($this->renamedTables)) {
                 foreach ($this->renamedTables as $uid => $oldName) {
-                    $this->tcaManager->delete($oldName);
+                    $this->viciManager->delete($oldName);
                 }
                 $this->renamedTables = [];
             }
 
-            $this->tcaManager->generate($uid, $status);
+            $this->viciManager->generate($uid);
         }
     }
 
-    /**
-     * @param array<string, mixed> $recordToDelete
-     */
-    public function processCmdmap_deleteAction(
-        string $table,
-        int $id,
-        array $recordToDelete,
-        bool &$recordWasDeleted,
-        DataHandler $dataHandler
-    ): void {
-        if ('tx_vici_table' === $table) {
-            $this->tcaManager->delete($id);
+    public function processCmdmap_deleteAction(string $table, int $id): void
+    {
+        if (ViciRepository::TABLENAME_TABLE === $table) {
+            $this->viciManager->delete($id);
         }
     }
 

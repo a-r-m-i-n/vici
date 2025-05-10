@@ -2,9 +2,10 @@
 
 namespace T3\Vici\Generator\Tca;
 
+use T3\Vici\Generator\AbstractPhpCodeGenerator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
-class CtrlGenerator extends AbstractTcaGenerator
+class CtrlGenerator extends AbstractPhpCodeGenerator
 {
     protected function generatePhpCode(): string
     {

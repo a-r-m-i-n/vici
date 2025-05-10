@@ -2,9 +2,10 @@
 
 namespace T3\Vici\Generator\Tca;
 
+use T3\Vici\Generator\AbstractPhpCodeGenerator;
 use T3\Vici\Generator\Tca\FieldTypes\FieldTypes;
 
-class ColumnsGenerator extends AbstractTcaGenerator
+class ColumnsGenerator extends AbstractPhpCodeGenerator
 {
     protected function generatePhpCode(): string
     {
