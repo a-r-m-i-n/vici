@@ -25,11 +25,21 @@ return [
         ],
         'copyAfterDuplFields' => 'columns',
     ],
+    'palettes' => [
+        'system_columns' => ['showitem' => <<<TXT
+            enable_column_hidden,enable_column_deleted,--linebreak--,
+            enable_column_start_end_time, enable_column_fegroup,--linebreak--,
+            enable_column_sorting,--linebreak--,
+            enable_column_languages,enable_column_versioning,--linebreak--,
+            enable_column_timestamps,enable_column_editlock
+            TXT
+        ],
+    ],
     'types' => [
         0 => [
             'showitem' => <<<TXT
                 --div--;General,
-                name,columns,label,
+                name,columns,label,--palette--;Enable system columns;system_columns;,
 
                 --div--;Appearance,
                 title,icon,
@@ -111,6 +121,78 @@ return [
                         'disabled' => false,
                     ],
                 ],
+            ],
+        ],
+
+        'enable_column_hidden' => [
+            'exclude' => false,
+            'label' => 'Hidden column',
+            'description' => 'Allows to enable/disable record',
+            'config' => [
+                'type' => 'check',
+                'default' => true,
+            ],
+        ],
+        'enable_column_deleted' => [
+            'exclude' => false,
+            'label' => 'Deleted column',
+            'description' => 'Adds soft-delete. Deleted records are moved to recycler.',
+            'config' => [
+                'type' => 'check',
+                'default' => true,
+            ],
+        ],
+        'enable_column_start_end_time' => [
+            'exclude' => false,
+            'label' => 'Start- and Endtime columns',
+            'config' => [
+                'type' => 'check',
+            ],
+        ],
+        'enable_column_fegroup' => [
+            'exclude' => false,
+            'label' => 'fe_group column',
+            'config' => [
+                'type' => 'check',
+            ],
+        ],
+        'enable_column_sorting' => [
+            'exclude' => false,
+            'label' => 'Sorting column',
+            'description' => 'Allows to sort records in list view manually',
+            'config' => [
+                'type' => 'check',
+            ],
+        ],
+        'enable_column_timestamps' => [
+            'exclude' => false,
+            'label' => 'Timestamp columns',
+            'description' => 'Adds creation and last update timestamps to database',
+            'config' => [
+                'type' => 'check',
+            ],
+        ],
+        'enable_column_versioning' => [
+            'exclude' => false,
+            'label' => 'Versioning columns',
+            'description' => 'Enables versioning for this record type',
+            'config' => [
+                'type' => 'check',
+            ],
+        ],
+        'enable_column_editlock' => [
+            'exclude' => false,
+            'label' => 'Editlock column',
+            'config' => [
+                'type' => 'check',
+            ],
+        ],
+        'enable_column_languages' => [
+            'exclude' => false,
+            'label' => 'Translation columns',
+            'description' => 'Makes this record type translatable',
+            'config' => [
+                'type' => 'check',
             ],
         ],
     ],

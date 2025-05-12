@@ -33,6 +33,46 @@ class CtrlGenerator extends AbstractPhpCodeGenerator
         }
         $data['typeicon_classes'] = ['default' => $icon];
 
+        // System fields
+        $data['enablecolumns'] = [];
+        if (!empty($this->table['enable_column_hidden'])) {
+            $data['enablecolumns']['disabled'] = 'hidden';
+        }
+        if (!empty($this->table['enable_column_start_end_time'])) {
+            $data['enablecolumns']['starttime'] = 'starttime ';
+            $data['enablecolumns']['endtime'] = 'endtime';
+        }
+        if (!empty($this->table['enable_column_fegroup'])) {
+            $data['enablecolumns']['fe_group'] = 'fe_group';
+        }
+        if (!empty($this->table['enable_column_editlock'])) {
+            $data['enablecolumns']['editlock'] = 'editlock';
+        }
+        if (empty($data['enablecolumns'])) {
+            unset($data['enablecolumns']);
+        }
+
+        if (!empty($this->table['enable_column_deleted'])) {
+            $data['delete'] = 'deleted';
+        }
+        if (!empty($this->table['enable_column_sorting'])) {
+            $data['sortby'] = 'sorting';
+        }
+        if (!empty($this->table['enable_column_timestamps'])) {
+            $data['crdate'] = 'crdate';
+            $data['tstamp'] = 'tstamp';
+        }
+        if (!empty($this->table['enable_column_versioning'])) {
+            $data['versioningWS'] = true;
+            $data['origUid'] = 't3_origuid';
+        }
+        if (!empty($this->table['enable_column_languages'])) {
+            $data['languageField'] = 'sys_language_uid';
+            $data['translationSource'] = 'l10n_source';
+            $data['transOrigDiffSourceField'] = 'l10n_diffsource';
+            $data['transOrigPointerField'] = 'l10n_parent';
+        }
+
         return var_export($data, true);
     }
 }

@@ -44,6 +44,9 @@ class FrontendController extends ActionController
         /** @var class-string<GenericViciModel> $className */
         $className = $this->staticValues->getProxyClassNamespace(GeneralUtility::underscoredToUpperCamelCase($tableRow['name']));
         $this->viciFrontendRepository->setObjectType($className);
+        if (!empty($tableRow['enable_column_sorting'])) {
+            $this->viciFrontendRepository->setDefaultOrderings(['sorting' => 'ASC']);
+        }
 
         $records = $this->viciFrontendRepository->findAll();
 
