@@ -2,6 +2,7 @@
 
 namespace T3\Vici\Generator;
 
+use Symfony\Component\Finder\Finder;
 use T3\Vici\Generator\Extbase\PropertiesGenerator;
 use T3\Vici\Generator\Tca\ColumnsGenerator;
 use T3\Vici\Generator\Tca\CtrlGenerator;
@@ -19,42 +20,74 @@ readonly class ViciManager
     }
 
     /**
-     * @see \T3\Vici\Hook\TcemainHook::processDatamap_afterDatabaseOperations
+     * @see \T3\Vici\Hook\DataHandlerHook::clearCachePostProc
      */
-    public function generate(int $tableUid): void
+    public function clearAll(): void
     {
-        $this->generateTca($tableUid);
-        $this->generateProxyClass($tableUid);
+        if (file_exists($this->staticValues->getCachePathForTca())) {
+            $finder = new Finder();
+            $tcaFiles = $finder
+                ->files()
+                ->in($this->staticValues->getCachePathForTca())
+                ->name($this->staticValues->getTableNamePrefix() . '*.php')
+                ->depth(0)
+            ;
+            foreach ($tcaFiles as $tcaFile) {
+                unlink($tcaFile->getRealPath());
+            }
+        }
+        if (file_exists($this->staticValues->getCachePathForProxyClasses())) {
+            $finder = new Finder();
+            $proxyClassFiles = $finder
+                ->files()
+                ->in($this->staticValues->getCachePathForProxyClasses())
+                ->name('*.php')
+                ->depth(0)
+            ;
+            foreach ($proxyClassFiles as $proxyClassFile) {
+                unlink($proxyClassFile->getRealPath());
+            }
+        }
     }
 
     /**
-     * @see \T3\Vici\Hook\TcemainHook::processCmdmap_deleteAction
-     * @see \T3\Vici\Hook\TcemainHook::processDatamap_afterDatabaseOperations
+     * @see \T3\Vici\Hook\DataHandlerHook::clearCachePostProc
      */
-    public function delete(int|string $uidOrTableName): void
+    public function generateAll(): void
     {
-        $this->deleteTca($uidOrTableName);
-        $this->deleteProxyClass($uidOrTableName);
+        $this->ensureExistingDirectories();
+
+        foreach ($this->repository->findAllTables() as $tableRow) {
+            $this->generateTca($tableRow);
+            $this->generateProxyClass($tableRow);
+        }
     }
 
-    private function generateTca(int $tableUid): void
+    private function ensureExistingDirectories(): void
     {
-        $tableRow = $this->repository->findTableByUid($tableUid);
+        $cachePathForTca = $this->staticValues->getCachePathForTca();
+        if (!file_exists($cachePathForTca)) {
+            GeneralUtility::mkdir_deep($cachePathForTca);
+        }
 
+        $cachePathForProxyClasses = $this->staticValues->getCachePathForProxyClasses();
+        if (!file_exists($cachePathForProxyClasses)) {
+            GeneralUtility::mkdir_deep($cachePathForProxyClasses);
+        }
+    }
+
+    /**
+     * @param array<string, mixed> $tableRow
+     */
+    private function generateTca(array $tableRow): void
+    {
         $tableName = $this->staticValues->getFullTableName($tableRow['name']);
-        $destinationPath = $this->staticValues->getCachePathForTca($tableName . '.php');
 
-        if (!file_exists(dirname($destinationPath))) {
-            GeneralUtility::mkdir_deep(dirname($destinationPath));
-        }
-        if (file_exists($destinationPath)) {
-            unlink($destinationPath);
-        }
         if ($tableRow['hidden']) {
             return;
         }
 
-        $tableColumns = $this->repository->findTableColumnsByTableUid($tableUid);
+        $tableColumns = $this->repository->findTableColumnsByTableUid($tableRow['uid']);
         if (empty($tableColumns)) {
             return;
         }
@@ -69,6 +102,7 @@ readonly class ViciManager
         $time = new \DateTimeImmutable();
         $generationInfoComment .= '// generated at ' . $time->format('d.m.Y H:i:s') . ' (' . $time->getTimestamp() . ')';
 
+        $destinationPath = $this->staticValues->getCachePathForTca($tableName . '.php');
         GeneralUtility::writeFile($destinationPath, <<<PHP
             <?php
             $generationInfoComment
@@ -82,27 +116,27 @@ readonly class ViciManager
             PHP, true);
     }
 
-    private function generateProxyClass(int $tableUid): void
+    /**
+     * @param array<string, mixed> $tableRow
+     */
+    private function generateProxyClass(array $tableRow): void
     {
-        $tableRow = $this->repository->findTableByUid($tableUid);
-
         // Extbase Model generation
         $modelName = GeneralUtility::underscoredToUpperCamelCase($tableRow['name']);
-        $destinationPath = $this->staticValues->getCachePathForProxyClasses($modelName . '.php');
-        if (!file_exists(dirname($destinationPath))) {
-            GeneralUtility::mkdir_deep(dirname($destinationPath));
-        }
-        if (file_exists($destinationPath)) {
-            unlink($destinationPath);
+
+        if ($tableRow['hidden']) {
+            return;
         }
 
-        $tableColumns = $this->repository->findTableColumnsByTableUid($tableUid);
+        $tableColumns = $this->repository->findTableColumnsByTableUid($tableRow['uid']);
         if (empty($tableColumns)) {
             return;
         }
 
         $propertiesCode = new PropertiesGenerator($tableRow, $tableColumns);
         $namespace = $this->staticValues->getProxyClassNamespace();
+
+        $destinationPath = $this->staticValues->getCachePathForProxyClasses($modelName . '.php');
         GeneralUtility::writeFile($destinationPath, <<<PHP
             <?php
 
@@ -113,25 +147,5 @@ readonly class ViciManager
             $propertiesCode
             }
             PHP, true);
-    }
-
-    private function deleteTca(int|string $uidOrTableName): void
-    {
-        if (is_int($uidOrTableName)) {
-            $table = $this->repository->findTableByUid($uidOrTableName);
-            $tableName = $this->staticValues->getFullTableName($table['name']);
-        } else {
-            $tableName = $this->staticValues->getFullTableName($uidOrTableName);
-        }
-        $destinationPath = $this->staticValues->getCachePathForTca($tableName . '.php');
-
-        if (file_exists($destinationPath)) {
-            unlink($destinationPath);
-        }
-    }
-
-    private function deleteProxyClass(int|string $uidOrTableName): void
-    {
-        // TODO
     }
 }

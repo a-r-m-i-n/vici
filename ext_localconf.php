@@ -2,7 +2,7 @@
 
 use T3\Vici\Controller\FrontendController;
 use T3\Vici\Generator\ProxyClassLoader;
-use T3\Vici\Hook\TcemainHook;
+use T3\Vici\Hook\DataHandlerHook;
 use T3\Vici\UserFunction\TcaFieldValidator\LeadingLetterValidator;
 use T3\Vici\UserFunction\TcaFieldValidator\ReservedTcaColumnsValidator;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -13,9 +13,8 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][LeadingLetterValidator::class] = '';
 $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['tce']['formevals'][ReservedTcaColumnsValidator::class] = '';
 
-// TCEMAIN Hook
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processDatamapClass']['vici'] = TcemainHook::class;
-$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['processCmdmapClass']['vici'] = TcemainHook::class;
+// DataHandler Hook
+$GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['t3lib/class.t3lib_tcemain.php']['clearCachePostProc']['vici'] = DataHandlerHook::class . '->clearCachePostProc';
 
 // Proxy class loader
 /** @var ProxyClassLoader $classLoader */
