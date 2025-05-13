@@ -1,5 +1,6 @@
 <?php
 
+use T3\Vici\UserFunction\ItemsProcFunc\AvailableViciTables;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 // Vici Frontend Content Element
@@ -9,11 +10,9 @@ $newColumns = [
         'config' => [
             'type' => 'select',
             'renderType' => 'selectSingle',
-            'foreign_table' => 'tx_vici_table',
-            //            'foreign_table_where' => 'ORDER BY tx_vici_table.name',
+            'itemsProcFunc' => AvailableViciTables::class . '->get',
             'minitems' => 0,
             'maxitems' => 1,
-            //            'allowNonIdValues' => true,
         ],
     ],
     'tx_vici_template' => [
@@ -35,7 +34,7 @@ $pluginIdentifier = ExtensionUtility::registerPlugin(
 
 TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     'tt_content',
-    'tx_vici_table,pages,recursive,--div--;Template,tx_vici_template',
+    '--div--;Vici Records,tx_vici_table,pages,recursive,--div--;Vici Templates,tx_vici_template',
     $pluginIdentifier,
     'after:palette:headers'
 );
