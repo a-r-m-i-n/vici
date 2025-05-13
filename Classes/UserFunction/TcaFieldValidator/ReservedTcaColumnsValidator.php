@@ -18,6 +18,7 @@ class ReservedTcaColumnsValidator extends AbstractValidator
         'fe_group',
         'sorting',
         'editlock',
+        't3_origuid',
         'sys_language_uid',
         'l10n_parent',
         'l10n_source',
