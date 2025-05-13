@@ -42,9 +42,9 @@ class ViciRepository
     }
 
     /**
-     * @return array<string, mixed> Table row
+     * @return array<string, mixed>|null Table row
      */
-    public function findTableByUid(int $tableUid): array
+    public function findTableByUid(int $tableUid): ?array
     {
         if (array_key_exists($tableUid, self::$tableCache)) {
             return self::$tableCache[$tableUid];
@@ -65,7 +65,7 @@ class ViciRepository
             return $row;
         }
 
-        throw new \UnexpectedValueException('No "tx_vici_table" entry found with uid ' . $tableUid);
+        return null;
     }
 
     /**

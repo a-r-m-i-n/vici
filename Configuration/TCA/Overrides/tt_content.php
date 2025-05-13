@@ -1,6 +1,7 @@
 <?php
 
 use T3\Vici\UserFunction\ItemsProcFunc\AvailableViciTables;
+use T3\Vici\UserFunction\PreviewRenderer\ViciFrontendPlugin;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
 // Vici Frontend Content Element
@@ -38,3 +39,5 @@ TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     $pluginIdentifier,
     'after:palette:headers'
 );
+
+$GLOBALS['TCA']['tt_content']['types'][$pluginIdentifier]['previewRenderer'] = ViciFrontendPlugin::class;
