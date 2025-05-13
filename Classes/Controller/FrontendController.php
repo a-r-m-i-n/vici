@@ -40,6 +40,13 @@ class FrontendController extends ActionController
         }
 
         $tableRow = $this->viciRepository->findTableByUid($contentObject['tx_vici_table']);
+        if (!$tableRow || $tableRow['hidden']) {
+            return $this->getErrorHtmlResponse('Vici table with uid ' . $contentObject['tx_vici_table'] . ' not found or hidden!');
+        }
+        $tableColumns = $this->viciRepository->findTableColumnsByTableUid($tableRow['uid']);
+        if (empty($tableColumns)) {
+            return $this->getErrorHtmlResponse('Vici table with uid ' . $contentObject['tx_vici_table'] . ' has no columns configured!');
+        }
 
         /** @var class-string<GenericViciModel> $className */
         $className = $this->staticValues->getProxyClassNamespace(GeneralUtility::underscoredToUpperCamelCase($tableRow['name']));
@@ -57,5 +64,14 @@ class FrontendController extends ActionController
         $this->view->assign('records', $records);
 
         return $this->htmlResponse();
+    }
+
+    private function getErrorHtmlResponse(string $message): ResponseInterface
+    {
+        $html = <<<HTML
+                <p style="border: 1px solid red; background: #fdd; padding: 1rem;"><strong>Vici Error:</strong> $message</p>
+            HTML;
+
+        return $this->htmlResponse($html)->withStatus(404);
     }
 }
