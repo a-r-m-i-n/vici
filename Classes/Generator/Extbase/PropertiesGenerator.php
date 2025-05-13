@@ -63,7 +63,7 @@ class PropertiesGenerator extends AbstractPhpCodeGenerator
         }
 
         $default = '';
-        if (!$property->isObjectStorage && ($property->defaultValue || $property->nullable)) {
+        if (!$property->isObjectStorage && (null !== $property->defaultValue || $property->nullable)) {
             $default = ' = ' . var_export($property->defaultValue, true);
         }
 
