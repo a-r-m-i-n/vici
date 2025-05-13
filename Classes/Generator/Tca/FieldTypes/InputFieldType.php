@@ -17,7 +17,7 @@ class InputFieldType extends AbstractFieldType
     }
 
     protected string $typeConfiguration = <<<TXT
-        size,
+        size,default,
         --div--;Field evaluation,
             --palette--;;input_min_max,
             eval,
@@ -61,6 +61,15 @@ class InputFieldType extends AbstractFieldType
                     'slider' => [
                         'step' => 1,
                     ],
+                ],
+            ],
+
+            'default' => [
+                'exclude' => false,
+                'label' => 'Default value',
+                'config' => [
+                    'type' => 'input',
+                    'default' => '',
                 ],
             ],
 
@@ -185,6 +194,10 @@ class InputFieldType extends AbstractFieldType
             $tcaConfig['max'] = $tableColumn['max'];
         }
 
+        if (!empty($tableColumn['default'])) {
+            $tcaConfig['default'] = $tableColumn['default'];
+        }
+
         return $tcaConfig;
     }
 
@@ -192,6 +205,6 @@ class InputFieldType extends AbstractFieldType
     {
         $name = GeneralUtility::underscoredToLowerCamelCase($tableColumn['name']);
 
-        return new PropertyValue($name, 'string');
+        return new PropertyValue($name, 'string', false, $tableColumn['default'] ?? '');
     }
 }
