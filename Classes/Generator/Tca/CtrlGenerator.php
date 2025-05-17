@@ -39,7 +39,7 @@ class CtrlGenerator extends AbstractPhpCodeGenerator
             $data['enablecolumns']['disabled'] = 'hidden';
         }
         if (!empty($this->table['enable_column_start_end_time'])) {
-            $data['enablecolumns']['starttime'] = 'starttime ';
+            $data['enablecolumns']['starttime'] = 'starttime';
             $data['enablecolumns']['endtime'] = 'endtime';
         }
         if (!empty($this->table['enable_column_fegroup'])) {
