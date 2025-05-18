@@ -17,7 +17,6 @@ No programming skills are required.
 
 * [ ] Extension (and content element) icon missing
 * [ ] Field types implementation
-* [ ] Backend module
 * [ ] Translations (in TCA)
 * [ ] New form node type: Translatable input
 * [ ] Configurable Palettes and Types

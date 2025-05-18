@@ -1,0 +1,22 @@
+<html
+    xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+    xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+    data-namespace-typo3-fluid="true">
+
+<f:if condition="!{iconSize}">
+    <f:variable name="iconSize" value="small" />
+</f:if>
+
+<div class="d-flex justify-content-start align-items-center ps-1">
+    <div title="uid={tableRow.uid}">
+        <core:icon identifier="{tableRow.icon}" overlay="{f:if(condition:'{tableRow.hidden}', then: 'overlay-hidden')}" size="{iconSize}" />
+    </div>
+    <div class="ms-1">
+        <f:if condition="{tableRow.title}">
+            <f:then>{tableRow.title} ({tableRow.name})</f:then>
+            <f:else>{tableRow.name}</f:else>
+        </f:if>
+    </div>
+</div>
+
+</html>

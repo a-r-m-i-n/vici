@@ -18,6 +18,10 @@ class ViciRepository
      */
     private static array $tableCache = [];
     /**
+     * @var array<string, array<string, mixed>> Key is name of table, value is the table row
+     */
+    private static array $tableCacheByName = [];
+    /**
      * @var array<int, array<int, array<string, mixed>>> Key is uid of table, value is an array of table columns
      */
     private static array $tableColumnsCache = [];
@@ -29,16 +33,48 @@ class ViciRepository
     /**
      * @return array<int, array<string, mixed>>
      */
-    public function findAllTables(): array
+    public function findAllTables(bool $includeHidden = false): array
     {
         $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_TABLE);
+        if ($includeHidden) {
+            $queryBuilder->getRestrictions()->removeByType(HiddenRestriction::class);
+        }
 
-        return $queryBuilder
+        $tableRows = $queryBuilder
             ->select('*')
             ->from(self::TABLENAME_TABLE)
             ->executeQuery()
             ->fetchAllAssociative()
         ;
+
+        // Do not return tableRows which PID is deleted or hidden
+        $result = [];
+        foreach ($tableRows as $tableRow) {
+            if (0 === $tableRow['pid']) {
+                $result[] = $tableRow;
+                continue;
+            }
+
+            $queryBuilder = $this->connectionPool->getQueryBuilderForTable('pages');
+            $queryBuilder->getRestrictions()->removeAll()->add(new DeletedRestriction());
+            if (!$includeHidden) {
+                $queryBuilder->getRestrictions()->add(new HiddenRestriction());
+            }
+
+            $pageRow = $queryBuilder
+                ->select('*')
+                ->from('pages')
+                ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($tableRow['pid'], Connection::PARAM_INT)))
+                ->executeQuery()
+                ->fetchAssociative()
+            ;
+
+            if ($pageRow) {
+                $result[] = $tableRow;
+            }
+        }
+
+        return $result;
     }
 
     /**
@@ -61,6 +97,33 @@ class ViciRepository
 
         if ($row = $queryBuilder->executeQuery()->fetchAssociative()) {
             self::$tableCache[$tableUid] = $row;
+
+            return $row;
+        }
+
+        return null;
+    }
+
+    /**
+     * @return array<string, mixed>|null Table row
+     */
+    public function findTableByName(string $tableName): ?array
+    {
+        if (array_key_exists($tableName, self::$tableCacheByName)) {
+            return self::$tableCacheByName[$tableName];
+        }
+
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_TABLE);
+        $queryBuilder->getRestrictions()->removeAll();
+        $queryBuilder->getRestrictions()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLENAME_TABLE)
+            ->where($queryBuilder->expr()->eq('name', $queryBuilder->createNamedParameter($tableName)))
+        ;
+
+        if ($row = $queryBuilder->executeQuery()->fetchAssociative()) {
+            self::$tableCacheByName[$tableName] = $row;
 
             return $row;
         }

@@ -35,6 +35,10 @@ class ReservedTcaColumnsValidator extends AbstractValidator
         'perms_everybody',
     ];
 
+    private const RESERVED_COLUMN_PARTS = [
+        'zzz_deleted',
+    ];
+
     public function evaluateFieldValue(string $value, ?string $isIn, bool &$set): string
     {
         if (in_array($value, self::RESERVED_COLUMNS, true)) {
@@ -44,6 +48,17 @@ class ReservedTcaColumnsValidator extends AbstractValidator
                 'Invalid column name "' . $value . '" given',
                 ContextualFeedbackSeverity::ERROR
             );
+        }
+
+        foreach (self::RESERVED_COLUMN_PARTS as $columnPart) {
+            if (str_contains($value, $columnPart)) {
+                $set = false;
+                $this->addFlashMessage(
+                    'Column name contains reserved name',
+                    'Invalid column name "' . $value . '" given. The string "' . $columnPart . '" may not be contained.',
+                    ContextualFeedbackSeverity::ERROR
+                );
+            }
         }
 
         return $value;

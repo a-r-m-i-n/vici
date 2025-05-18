@@ -63,6 +63,21 @@ readonly class ViciManager
         }
     }
 
+    /**
+     * @param array<string, mixed> $tableRow
+     */
+    public function checkIfTableTcaIsUpToDate(array $tableRow): ?bool
+    {
+        $tableName = $this->staticValues->getFullTableName($tableRow['name']);
+        $tcaFilePath = $this->staticValues->getCachePathForTca($tableName . '.php');
+
+        if (!file_exists($tcaFilePath)) {
+            return null;
+        }
+
+        return filectime($tcaFilePath) > $tableRow['tstamp'];
+    }
+
     private function ensureExistingDirectories(): void
     {
         $cachePathForTca = $this->staticValues->getCachePathForTca();

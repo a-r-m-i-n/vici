@@ -1,0 +1,125 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+<f:layout name="Module" />
+
+<f:section name="Content">
+    <f:render partial="ViciHeader" />
+
+    <f:if condition="{tableRows -> f:count()} > 0">
+        <f:then>
+            <f:variable name="showCacheNotice">0</f:variable>
+            <table class="table table-striped table-hover">
+                <tbody>
+                <f:for each="{tableRows}" as="row" iteration="iterator">
+                    <tr>
+                        <th colspan="3" class="px-0 bg-light {f:if(condition:'{iterator.isFirst}', then: '', else: 'pt-4')}">
+                            <f:if condition="{row.pageRow.uid}">
+                                <f:then>
+                                    <core:iconForRecord table="pages" row="{row.pageRow}" />
+                                    {row.pageRow.title} <code class="fw-normal text-muted ms-1">[pid={row.pageRow.uid}]</code></f:then>
+                                <f:else>
+                                    <span class="text-muted"><core:icon identifier="actions-brand-typo3" /></span>
+                                    Root page <code class="fw-normal text-muted ms-1">[pid=0]</code>
+                                </f:else>
+                            </f:if>
+                        </th>
+                    </tr>
+                    <f:for each="{row.tableRows}" as="tableRow">
+                        <tr>
+                            <td>
+                                <f:link.action action="edit" arguments="{tableUid:tableRow.uid}"><f:render partial="TableRow/NameAndIcon" arguments="{tableRow:tableRow}" /></f:link.action>
+                            </td>
+                            <td class="w-50">
+                                <f:if condition="{row.pageRow.hidden} == 0 && {tableRow.hidden} == 0">
+                                    <f:then>
+                                        <f:if condition="{tableRow._tcaFileStatus} != 'ok'">
+                                            <f:then>
+                                                <f:variable name="showCacheNotice">1</f:variable>
+                                                <p class="my-0">
+                                                    <span class="text-danger"><core:icon identifier="actions-exclamation-triangle-alt" /></span>
+                                                    <f:if condition="{tableRow._tcaFileStatus} == 'missing'">
+                                                        <f:then>
+                                                            TCA file is missing. Please flush all caches to regenerate TCA file.
+                                                        </f:then>
+                                                        <f:else>
+                                                            Updates to vici table missing in TCA cache. Please flush all caches to apply changes.
+                                                        </f:else>
+                                                    </f:if>
+                                                </p>
+                                            </f:then>
+                                            <f:else>
+                                                <f:if condition="{tableRow._necessaryDatabaseCompareChanges}">
+                                                    <f:then>
+                                                        <p class="my-0">
+                                                            <f:if condition="{tableRow._necessaryDatabaseCompareChanges -> f:count()} == 1">
+                                                                <f:then>There is <strong class="text-danger">one necessary change</strong> in database structure missing.</f:then>
+                                                                <f:else>There are <strong class="text-danger">{tableRow._necessaryDatabaseCompareChanges -> f:count()} necessary changes</strong> in database structure missing.</f:else>
+                                                            </f:if>
+                                                        </p>
+                                                        <f:link.action action="showDatabaseChanges" class="btn btn-sm btn-default mt-1" arguments="{tableUid: tableRow.uid}">
+                                                            <core:icon identifier="actions-database-reload" />
+                                                            See details and apply changes
+                                                        </f:link.action>
+                                                    </f:then>
+                                                    <f:else>
+                                                        <span class="text-success"><core:icon identifier="actions-check-circle-alt" /></span>
+                                                        All good
+                                                    </f:else>
+                                                </f:if>
+                                            </f:else>
+                                        </f:if>
+                                    </f:then>
+                                    <f:else if="{tableRow.hidden} == 1">
+                                        <span class="text-muted"><core:icon identifier="actions-ban" /></span>
+                                        <span class="text-muted">Disabled</span>
+                                    </f:else>
+                                    <f:else>
+                                        <span class="text-muted"><core:icon identifier="actions-ban" /></span>
+                                        <span class="text-muted">Disabled, because parent page is hidden</span>
+                                    </f:else>
+                                </f:if>
+                            </td>
+                            <td class="text-end">
+                                <f:link.action action="edit" arguments="{tableUid:tableRow.uid}" class="btn btn-default">
+                                    <core:icon identifier="actions-open" />
+                                    Edit
+                                </f:link.action>
+                            </td>
+                        </tr>
+                    </f:for>
+                </f:for>
+                </tbody>
+            </table>
+
+            <f:if condition="!{allowedToClearCaches} && {showCacheNotice}">
+                <p>
+                    <strong>Cache notice:</strong> You don't have permission to flush all caches.
+                    Please contact your administrator to either clear the caches or grant you the necessary permissions.
+                </p>
+            </f:if>
+        </f:then>
+        <f:else>
+            <div class="alert alert-secondary mt-4">
+                <div class="d-flex justify-content-start align-items-center">
+                    <div class="text-muted"><core:icon identifier="actions-question" size="medium" /></div>
+                    <div class="ms-3">
+                        <strong class="text-dark">No vici tables found</strong>
+                        <p class="my-0">
+                            <f:if condition="{userIsAdmin}">
+                                <f:then>There are no vici tables existing, yet.</f:then>
+                                <f:else>There are no vici table existing you have access to.</f:else>
+                            </f:if>
+                            Go to list view and create your first vici table.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </f:else>
+    </f:if>
+</f:section>
+
+</html>

@@ -1,0 +1,23 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        xmlns:core="http://typo3.org/ns/TYPO3/CMS/Core/ViewHelpers"
+        xmlns:be="http://typo3.org/ns/TYPO3/CMS/Backend/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+<f:layout name="Module" />
+
+<f:section name="Content">
+    <f:render partial="ViciHeader" />
+
+    <div class="alert alert-danger mt-4">
+        <div class="d-flex justify-content-start align-items-center">
+            <div class="text-danger"><core:icon identifier="actions-exclamation-triangle-alt" size="medium" /></div>
+            <div class="ms-3">
+                <strong class="text-danger">Insufficient Permissions</strong>
+                <p class="my-0">You have no write access to table <code class="text-danger fw-bold">tx_vici_table</code>. Please ask your administrator to adjust your permissions.</p>
+            </div>
+        </div>
+    </div>
+</f:section>
+
+</html>

@@ -1,0 +1,40 @@
+<html
+        xmlns:f="http://typo3.org/ns/TYPO3/CMS/Fluid/ViewHelpers"
+        data-namespace-typo3-fluid="true">
+
+<f:layout name="Module" />
+
+<f:section name="Content">
+    <f:render partial="ViciHeader" />
+
+    <h2 class="h3 mt-4 pb-2 border-bottom">
+        <div class="d-flex justify-content-start align-items-center">
+            <div class="me-1">Database Updates for</div>
+            <f:render partial="TableRow/NameAndIcon" arguments="{tableRow:tableRow, iconSize:'medium'}" />
+        </div>
+    </h2>
+
+    <p>The following database schema updates are required, to apply the latest changes and make the record type work as expected.</p>
+    <p><strong>Please select which schema updates should get applied to database:</strong></p>
+
+    <f:form action="applyDatabaseChanges" arguments="{tableUid: tableRow.uid}">
+        <table class="table table-striped">
+            <f:for each="{tableRow._necessaryDatabaseCompareChanges}" as="change" key="hash">
+                <tr>
+                    <td>
+                        <f:form.checkbox name="selectedHashes[]" value="{hash}" checked="1" />
+                    </td>
+                    <td class="w-100">
+                        <code>{change.sql}</code>
+                    </td>
+                </tr>
+            </f:for>
+        </table>
+        <div class="text-end">
+            <f:link.action action="index" class="btn btn-default">Abort</f:link.action>
+            <f:form.submit value="Apply database changes" class="btn btn-primary" />
+        </div>
+    </f:form>
+</f:section>
+
+</html>
