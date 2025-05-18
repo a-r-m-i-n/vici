@@ -26,6 +26,7 @@ return [
         'copyAfterDuplFields' => 'columns',
     ],
     'palettes' => [
+        'general' => ['showitem' => 'name,hidden'],
         'system_columns' => ['showitem' => <<<TXT
             enable_column_hidden,enable_column_deleted,--linebreak--,
             enable_column_start_end_time, enable_column_fegroup,--linebreak--,
@@ -39,7 +40,8 @@ return [
         0 => [
             'showitem' => <<<TXT
                 --div--;General,
-                name,columns,label,--palette--;Enable system columns;system_columns;,
+                --palette--;;general,
+                columns,label,--palette--;Enable system columns;system_columns;,
 
                 --div--;Appearance,
                 title,icon,
