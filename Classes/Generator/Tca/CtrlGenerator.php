@@ -45,11 +45,11 @@ class CtrlGenerator extends AbstractPhpCodeGenerator
         if (!empty($this->table['enable_column_fegroup'])) {
             $data['enablecolumns']['fe_group'] = 'fe_group';
         }
-        if (!empty($this->table['enable_column_editlock'])) {
-            $data['enablecolumns']['editlock'] = 'editlock';
-        }
         if (empty($data['enablecolumns'])) {
             unset($data['enablecolumns']);
+        }
+        if (!empty($this->table['enable_column_editlock'])) {
+            $data['editlock'] = 'editlock';
         }
 
         if (!empty($this->table['enable_column_deleted'])) {
