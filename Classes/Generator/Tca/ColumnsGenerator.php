@@ -27,7 +27,9 @@ class ColumnsGenerator extends AbstractPhpCodeGenerator
 
             if (!empty($tableColumn['additional_config'])) {
                 $additionalConfig = json_decode($tableColumn['additional_config'], true);
-                $tca = array_merge_recursive($tca, $additionalConfig);
+                if (!empty($additionalConfig) && is_array($additionalConfig)) {
+                    $tca = array_merge_recursive($tca, $additionalConfig);
+                }
             }
 
             $data[$tableColumn['name']] = $tca;
