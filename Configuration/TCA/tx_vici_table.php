@@ -129,7 +129,7 @@ return [
         'enable_column_hidden' => [
             'exclude' => false,
             'label' => 'Hidden column',
-            'description' => 'Allows to enable/disable record',
+            'description' => 'Allows to enable/disable record.',
             'config' => [
                 'type' => 'check',
                 'default' => true,
@@ -146,7 +146,8 @@ return [
         ],
         'enable_column_start_end_time' => [
             'exclude' => false,
-            'label' => 'Start- and Endtime columns',
+            'label' => 'Start- and endtime columns',
+            'description' => 'Add timings to visibility of the record type.',
             'config' => [
                 'type' => 'check',
             ],
@@ -154,6 +155,7 @@ return [
         'enable_column_fegroup' => [
             'exclude' => false,
             'label' => 'fe_group column',
+            'description' => 'Allows to restrict access to frontend user groups for this record type.',
             'config' => [
                 'type' => 'check',
             ],
@@ -161,7 +163,7 @@ return [
         'enable_column_sorting' => [
             'exclude' => false,
             'label' => 'Sorting column',
-            'description' => 'Allows to sort records in list view manually',
+            'description' => 'Allows to sort records in list view manually.',
             'config' => [
                 'type' => 'check',
             ],
@@ -169,7 +171,7 @@ return [
         'enable_column_timestamps' => [
             'exclude' => false,
             'label' => 'Timestamp columns',
-            'description' => 'Adds creation and last update timestamps to database',
+            'description' => 'Adds creation and last update timestamps to database.',
             'config' => [
                 'type' => 'check',
             ],
@@ -177,7 +179,7 @@ return [
         'enable_column_versioning' => [
             'exclude' => false,
             'label' => 'Versioning columns',
-            'description' => 'Enables versioning for this record type',
+            'description' => 'Enables versioning for this record type.',
             'config' => [
                 'type' => 'check',
             ],
@@ -185,6 +187,7 @@ return [
         'enable_column_editlock' => [
             'exclude' => false,
             'label' => 'Editlock column',
+            'description' => 'Adds the ability to edit certain records of this type can be limited to administrators.',
             'config' => [
                 'type' => 'check',
             ],
@@ -192,7 +195,7 @@ return [
         'enable_column_languages' => [
             'exclude' => false,
             'label' => 'Translation columns',
-            'description' => 'Makes this record type translatable',
+            'description' => 'Makes this record type translatable.',
             'config' => [
                 'type' => 'check',
             ],
