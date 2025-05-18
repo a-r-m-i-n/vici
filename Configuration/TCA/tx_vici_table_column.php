@@ -4,7 +4,7 @@ use T3\Vici\Generator\Tca\FieldTypes\FieldTypes;
 
 return [
     'ctrl' => [
-        'title' => 'Table column',
+        'title' => 'VICI table column',
         'label' => 'name',
         'hideTable' => true,
         'rootLevel' => -1,

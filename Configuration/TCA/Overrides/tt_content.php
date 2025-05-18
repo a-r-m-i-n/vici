@@ -7,7 +7,7 @@ use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 // Vici Frontend Content Element
 $newColumns = [
     'tx_vici_table' => [
-        'label' => 'Vici Table',
+        'label' => 'VICI Table',
         'config' => [
             'type' => 'select',
             'renderType' => 'selectSingle',
@@ -17,7 +17,7 @@ $newColumns = [
         ],
     ],
     'tx_vici_template' => [
-        'label' => 'Vici Template',
+        'label' => 'VICI Template',
         'config' => [
             'type' => 'text',
             'renderType' => 'codeEditor',
@@ -30,12 +30,15 @@ TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', $
 $pluginIdentifier = ExtensionUtility::registerPlugin(
     'vici',
     'Frontend',
-    'Vici Frontend Plugin',
+    'VICI Frontend Plugin',
+    'vici-extension-icon',
+    'plugins',
+    'Output custom table contents made by EXT:vici',
 );
 
 TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
     'tt_content',
-    '--div--;Vici Records,tx_vici_table,pages,recursive,--div--;Vici Templates,tx_vici_template',
+    '--div--;VICI Records,tx_vici_table,pages,recursive,--div--;VICI Templates,tx_vici_template',
     $pluginIdentifier,
     'after:palette:headers'
 );

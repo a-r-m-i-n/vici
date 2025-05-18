@@ -15,7 +15,6 @@ No programming skills are required.
 
 ## Development Roadmap
 
-* [ ] Extension (and content element) icon missing
 * [ ] Field types implementation
 * [ ] Translations (in TCA)
 * [ ] New form node type: Translatable input

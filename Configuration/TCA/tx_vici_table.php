@@ -5,7 +5,7 @@ use T3\Vici\UserFunction\TcaFieldValidator\LeadingLetterValidator;
 
 return [
     'ctrl' => [
-        'title' => 'Table',
+        'title' => 'VICI Table',
         'label' => 'name',
         'rootLevel' => -1,
         'tstamp' => 'tstamp',
