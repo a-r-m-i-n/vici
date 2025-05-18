@@ -78,6 +78,16 @@ readonly class ViciManager
         return filectime($tcaFilePath) > $tableRow['tstamp'];
     }
 
+    /**
+     * @param array<string, mixed> $tableRow
+     */
+    public function checkIfTableIsExistingInCachedTca(array $tableRow): bool
+    {
+        $tableName = $this->staticValues->getFullTableName($tableRow['name']);
+
+        return array_key_exists($tableName, $GLOBALS['TCA'] ?? []);
+    }
+
     private function ensureExistingDirectories(): void
     {
         $cachePathForTca = $this->staticValues->getCachePathForTca();

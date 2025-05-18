@@ -74,12 +74,38 @@
                                         </f:if>
                                     </f:then>
                                     <f:else if="{tableRow.hidden} == 1">
-                                        <span class="text-muted"><core:icon identifier="actions-ban" /></span>
-                                        <span class="text-muted">Disabled</span>
+                                        <f:if condition="{tableRow._tcaExisting}">
+                                            <f:then>
+                                                <p class="my-0 text-danger">
+                                                    <core:icon identifier="actions-exclamation-triangle-alt" />
+                                                    This table is still existing in cached TCA, although it is disabled.
+                                                    Please flush all caches to remove this table from TCA.
+                                                </p>
+                                            </f:then>
+                                            <f:else>
+                                                <p class="my-0">
+                                                    <span class="text-muted"><core:icon identifier="actions-ban" /></span>
+                                                    <span class="text-muted">Disabled</span>
+                                                </p>
+                                            </f:else>
+                                        </f:if>
                                     </f:else>
                                     <f:else>
-                                        <span class="text-muted"><core:icon identifier="actions-ban" /></span>
-                                        <span class="text-muted">Disabled, because parent page is hidden</span>
+                                        <f:if condition="{tableRow._tcaExisting}">
+                                            <f:then>
+                                                <p class="my-0 text-danger">
+                                                    <core:icon identifier="actions-exclamation-triangle-alt" />
+                                                    This table is still existing in cached TCA, although its parent page is disabled.
+                                                    Please flush all caches to remove this table from TCA.
+                                                </p>
+                                            </f:then>
+                                            <f:else>
+                                                <p class="my-0">
+                                                    <span class="text-muted"><core:icon identifier="actions-ban" /></span>
+                                                    <span class="text-muted">Disabled, because parent page is hidden</span>
+                                                </p>
+                                            </f:else>
+                                        </f:if>
                                     </f:else>
                                 </f:if>
                             </td>

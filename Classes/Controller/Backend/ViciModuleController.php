@@ -61,10 +61,6 @@ class ViciModuleController extends ActionController
         $databaseCompareChanges = $this->databaseMigrationService->getRelatedStatements();
         foreach ($tableRowsGroupedByPage as $indexPages => $row) {
             foreach ($row['tableRows'] as $indexTableRows => $tableRow) {
-                if ($tableRow['hidden']) {
-                    continue;
-                }
-
                 $isUpToDate = $this->viciManager->checkIfTableTcaIsUpToDate($tableRow);
                 if (null === $isUpToDate) {
                     $tableRow['_tcaFileStatus'] = 'missing';
@@ -74,6 +70,7 @@ class ViciModuleController extends ActionController
                     $tableRow = $this->applyDatabaseCompareChanges($tableRow, $databaseCompareChanges);
                     $tableRow['_tcaFileStatus'] = 'ok';
                 }
+                $tableRow['_tcaExisting'] = $this->viciManager->checkIfTableIsExistingInCachedTca($tableRow);
                 $tableRowsGroupedByPage[$indexPages]['tableRows'][$indexTableRows] = $tableRow;
             }
         }
