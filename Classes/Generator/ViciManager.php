@@ -68,6 +68,14 @@ readonly class ViciManager
      */
     public function checkIfTableTcaIsUpToDate(array $tableRow): ?bool
     {
+        $latestTstamp = $tableRow['tstamp'];
+        $tableColumns = $this->repository->findTableColumnsByTableUid($tableRow['uid']);
+        foreach ($tableColumns as $tableColumn) {
+            if ($tableColumn['tstamp'] > $latestTstamp) {
+                $latestTstamp = $tableColumn['tstamp'];
+            }
+        }
+
         $tableName = $this->staticValues->getFullTableName($tableRow['name']);
         $tcaFilePath = $this->staticValues->getCachePathForTca($tableName . '.php');
 
@@ -75,7 +83,7 @@ readonly class ViciManager
             return null;
         }
 
-        return filectime($tcaFilePath) > $tableRow['tstamp'];
+        return filectime($tcaFilePath) > $latestTstamp;
     }
 
     /**
