@@ -26,6 +26,22 @@ class CtrlGenerator extends AbstractPhpCodeGenerator
         }
         $data['label'] = $this->tableColumns[$labelColumn]['name'];
 
+        if ($this->table['label_alt_force']) {
+            $data['label_alt_force'] = true;
+        }
+        if (!empty($this->table['label_alt'])) {
+            $columnUids = GeneralUtility::intExplode(',', $this->table['label_alt'], true);
+            $labelAlt = [];
+            foreach ($columnUids as $columnUid) {
+                if (array_key_exists($columnUid, $this->tableColumns)) {
+                    $labelAlt[] = $this->tableColumns[$columnUid]['name'];
+                }
+            }
+            if (!empty($labelAlt)) {
+                $data['label_alt'] = implode(',', $labelAlt);
+            }
+        }
+
         // Icon
         $icon = $this->table['icon'];
         if (empty($icon)) {

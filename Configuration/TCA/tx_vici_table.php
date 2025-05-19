@@ -24,6 +24,7 @@ return [
     ],
     'palettes' => [
         'general' => ['showitem' => 'name,hidden'],
+        'label' => ['showitem' => 'label,label_alt_force,--linebreak--,label_alt'],
         'visibility' => ['showitem' => 'root_level,ignore_page_type,hide_table,'],
         'system_columns' => ['showitem' => <<<TXT
             enable_column_hidden,enable_column_deleted,--linebreak--,
@@ -39,9 +40,10 @@ return [
             'showitem' => <<<TXT
                 --div--;General,
                 --palette--;;general,
-                columns,label,
-                --palette--;Record type visibility;visibility;,
-                --palette--;Enable system columns;system_columns;,
+                columns,
+                --palette--;;label,
+                --palette--;Record type visibility;visibility,
+                --palette--;Enable system columns;system_columns,
 
                 --div--;Appearance,
                 title,icon,
@@ -95,6 +97,28 @@ return [
                 'minitems' => 0,
                 'maxitems' => 1,
                 'allowNonIdValues' => true,
+            ],
+        ],
+        'label_alt' => [
+            'exclude' => false,
+            'label' => 'Alternative label',
+            'description' => 'Optional columns being displayed as label, if label field is empty.',
+            'displayCond' => 'FIELD:columns:>:0',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectMultipleSideBySide',
+                'foreign_table' => 'tx_vici_table_column',
+                'foreign_table_where' => 'AND tx_vici_table_column.parent=###THIS_UID### ORDER BY tx_vici_table_column.sorting',
+                'minitems' => 0,
+            ],
+        ],
+        'label_alt_force' => [
+            'exclude' => false,
+            'label' => 'Force alternative label',
+            'description' => 'If enabled, the label and the alternative label columns are always shown in the record title, separated by comma.',
+            'displayCond' => 'FIELD:columns:>:0',
+            'config' => [
+                'type' => 'check',
             ],
         ],
         'title' => [
