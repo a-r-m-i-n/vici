@@ -33,6 +33,19 @@ class CtrlGenerator extends AbstractPhpCodeGenerator
         }
         $data['typeicon_classes'] = ['default' => $icon];
 
+        // Visibility
+        if (1 === $this->table['root_level']) {
+            $data['rootLevel'] = 1;
+        } else {
+            $data['rootLevel'] = $this->table['root_level'];
+            if ($this->table['ignore_page_type']) {
+                $data['security']['ignorePageTypeRestriction'] = true;
+            }
+        }
+        if ($this->table['hide_table']) {
+            $data['hideTable'] = true;
+        }
+
         // System fields
         $data['enablecolumns'] = [];
         if (!empty($this->table['enable_column_hidden'])) {

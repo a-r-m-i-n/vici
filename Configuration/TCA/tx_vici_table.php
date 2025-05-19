@@ -20,13 +20,11 @@ return [
         'typeicon_classes' => [
             'default' => 'mimetypes-x-content-table',
         ],
-        'security' => [
-            'ignoreRootLevelRestriction' => false,
-        ],
         'copyAfterDuplFields' => 'columns',
     ],
     'palettes' => [
         'general' => ['showitem' => 'name,hidden'],
+        'visibility' => ['showitem' => 'root_level,ignore_page_type,hide_table,'],
         'system_columns' => ['showitem' => <<<TXT
             enable_column_hidden,enable_column_deleted,--linebreak--,
             enable_column_start_end_time, enable_column_fegroup,--linebreak--,
@@ -41,7 +39,9 @@ return [
             'showitem' => <<<TXT
                 --div--;General,
                 --palette--;;general,
-                columns,label,--palette--;Enable system columns;system_columns;,
+                columns,label,
+                --palette--;Record type visibility;visibility;,
+                --palette--;Enable system columns;system_columns;,
 
                 --div--;Appearance,
                 title,icon,
@@ -123,6 +123,51 @@ return [
                         'disabled' => false,
                     ],
                 ],
+            ],
+        ],
+
+        'root_level' => [
+            'exclude' => false,
+            'label' => 'Root level',
+            'description' => 'Determines where a record may exist in the page tree.',
+            'config' => [
+                'type' => 'select',
+                'renderType' => 'selectSingle',
+                'minitems' => 1,
+                'maxitems' => 1,
+                'items' => [
+                    [
+                        'label' => 'Can only exist in the page tree (Default)',
+                        'value' => 0,
+                    ],
+                    [
+                        'label' => 'Can only exist in the root',
+                        'value' => 1,
+                    ],
+                    [
+                        'label' => 'Can exist in both page tree and root',
+                        'value' => -1,
+                    ],
+                ],
+                'default' => 0,
+            ],
+            'onChange' => 'reload',
+        ],
+        'ignore_page_type' => [
+            'exclude' => false,
+            'label' => 'Ignore page type restriction',
+            'description' => 'Allows to create this record type on any page type, not just in (system) folders.',
+            'config' => [
+                'type' => 'check',
+            ],
+            'displayCond' => 'FIELD:root_level:<:1',
+        ],
+        'hide_table' => [
+            'exclude' => false,
+            'label' => 'Hide table',
+            'description' => 'Hide this table in record listings, especially the list module.',
+            'config' => [
+                'type' => 'check',
             ],
         ],
 
