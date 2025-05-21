@@ -163,8 +163,8 @@ class ViciModuleController extends ActionController
                 ];
             }
 
-            $pageShow = $this->backendUser->doesUserHaveAccess($pageRow, Permission::PAGE_SHOW);
-            $pageEditContents = $this->backendUser->doesUserHaveAccess($pageRow, Permission::CONTENT_EDIT);
+            $pageShow = $this->backendUser->doesUserHaveAccess($result[$pageUid]['pageRow'], Permission::PAGE_SHOW);
+            $pageEditContents = $this->backendUser->doesUserHaveAccess($result[$pageUid]['pageRow'], Permission::CONTENT_EDIT);
             if ($pageShow && $pageEditContents) {
                 $result[$pageUid]['tableRows'][] = $tableRow;
             }
