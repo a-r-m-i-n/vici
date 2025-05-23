@@ -38,6 +38,11 @@ readonly class FrontendPlugin
         return $this->row['tx_vici_template'] ?? '';
     }
 
+    public function getViciDetailpageTemplate(): string
+    {
+        return $this->row['tx_vici_template_detail'] ?? '';
+    }
+
     // Pagination options
 
     public function isPaginationEnabled(): bool
@@ -70,6 +75,18 @@ readonly class FrontendPlugin
     public function getPaginationShowArrows(): bool
     {
         return $this->options['paginationShowPrevNextArrows'] ?? false;
+    }
+
+    // Detailpage options
+
+    public function isDetailpageEnabled(): bool
+    {
+        return $this->options['enableDetailpage'] ?? false;
+    }
+
+    public function getSlugColumn(): ?int
+    {
+        return $this->options['slugColumn'] ?? null;
     }
 
     // Rootline check

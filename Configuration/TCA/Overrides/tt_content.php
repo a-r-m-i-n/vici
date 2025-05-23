@@ -17,7 +17,7 @@ $pluginIdentifier = ExtensionUtility::registerPlugin(
 
 ExtensionManagementUtility::addToAllTCAtypes(
     'tt_content',
-    '--div--;VICI Records,tx_vici_table,pages,recursive,tx_vici_options,--div--;VICI Templates,tx_vici_template',
+    '--div--;VICI Records,tx_vici_table,pages,recursive,tx_vici_options,--div--;VICI Templates,tx_vici_template,tx_vici_template_detail',
     $pluginIdentifier,
     'after:palette:headers'
 );
@@ -26,7 +26,7 @@ $GLOBALS['TCA']['tt_content']['types'][$pluginIdentifier]['previewRenderer'] = V
 
 $newColumns = [
     'tx_vici_table' => [
-        'label' => 'VICI Table',
+        'label' => 'VICI table',
         'config' => [
             'type' => 'select',
             'renderType' => 'selectSingle',
@@ -46,12 +46,21 @@ $newColumns = [
         ],
     ],
     'tx_vici_template' => [
-        'label' => 'VICI Template',
+        'label' => 'VICI template',
         'config' => [
             'type' => 'text',
             'renderType' => 'codeEditor',
             'format' => 'html',
         ],
+    ],
+    'tx_vici_template_detail' => [
+        'label' => 'VICI detail template',
+        'config' => [
+            'type' => 'text',
+            'renderType' => 'codeEditor',
+            'format' => 'html',
+        ],
+        'displayCond' => 'USER:T3\\Vici\\UserFunction\\DisplayCondition\\DetailpageIsEnabled->check',
     ],
 ];
 ExtensionManagementUtility::addTCAcolumns('tt_content', $newColumns);

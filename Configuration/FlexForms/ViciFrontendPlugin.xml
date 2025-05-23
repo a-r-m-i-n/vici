@@ -12,6 +12,13 @@
                         </config>
                         <onChange>reload</onChange>
                     </settings.enablePagination>
+                    <settings.enableDetailpage>
+                        <label>Enable detail page</label>
+                        <config>
+                            <type>check</type>
+                        </config>
+                        <onChange>reload</onChange>
+                    </settings.enableDetailpage>
                 </el>
             </ROOT>
         </sDEF>
@@ -78,5 +85,23 @@
                 </el>
             </ROOT>
         </pagination>
+        <detailpage>
+            <ROOT>
+                <sheetTitle>Detail page</sheetTitle>
+                <type>array</type>
+                <el>
+                    <settings.slugColumn>
+                        <label>Slug column</label>
+                        <description>Defines which column should be used for route enhancer.</description>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <itemsProcFunc>T3\Vici\UserFunction\ItemsProcFunc\AvailableViciColumnsInFlexForm->get</itemsProcFunc>
+                        </config>
+                        <displayCond>FIELD:sDEF.settings.enableDetailpage:=:1</displayCond>
+                    </settings.slugColumn>
+                </el>
+            </ROOT>
+        </detailpage>
     </sheets>
 </T3DataStructure>

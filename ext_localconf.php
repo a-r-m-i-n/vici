@@ -26,7 +26,7 @@ ExtensionUtility::configurePlugin(
     'Vici',
     'Frontend',
     [
-        FrontendController::class => 'index',
+        FrontendController::class => 'index,show',
     ],
     [],
     ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT

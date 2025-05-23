@@ -17,6 +17,10 @@ services:
         resource: '../Classes/UserFunction/PreviewRenderer/*'
         public: true
 
+    T3\Vici\UserFunction\DisplayCondition\:
+        resource: '../Classes/UserFunction/DisplayCondition/*'
+        public: true
+
     T3\Vici\Generator\TcaManager:
         public: true
 

@@ -3,20 +3,28 @@
 namespace T3\Vici\Controller;
 
 use Psr\Http\Message\ResponseInterface;
+use T3\Vici\FrontendPlugin\FrontendPlugin;
 use T3\Vici\FrontendPlugin\FrontendPluginRepository;
 use T3\Vici\Generator\StaticValues;
 use T3\Vici\Model\GenericViciModel;
 use T3\Vici\Repository\ViciFrontendRepository;
 use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\View\ViewInterface;
 use TYPO3\CMS\Extbase\Mvc\Controller\ActionController;
 use TYPO3\CMS\Extbase\Pagination\QueryResultPaginator;
 use TYPO3\CMS\Fluid\View\FluidViewAdapter;
 use TYPO3\CMS\Frontend\ContentObject\ContentObjectRenderer;
 use TYPO3\CMS\Frontend\Page\PageInformation;
+use TYPO3Fluid\Fluid\View\ViewInterface as FluidStandaloneViewInterface;
 
 class FrontendController extends ActionController
 {
+    private FrontendPlugin $frontendPlugin;
+
+    /** @var array<string, mixed> */
+    private array $tableRow;
+
     public function __construct(
         private readonly FrontendPluginRepository $frontendPluginRepository,
         private readonly ViciFrontendRepository $viciFrontendRepository,
@@ -25,48 +33,60 @@ class FrontendController extends ActionController
     ) {
     }
 
-    public function indexAction(int $currentPageNumber = 1): ResponseInterface
+    protected function initializeAction(): void
     {
         $contentObject = $this->request->getAttribute('currentContentObject');
         if ($contentObject instanceof ContentObjectRenderer) {
-            $frontendPlugin = $this->frontendPluginRepository->createFrontendPluginInstance($contentObject->data);
-            $this->view->assign('frontendPlugin', $frontendPlugin);
-            unset($contentObject);
+            $this->frontendPlugin = $this->frontendPluginRepository->createFrontendPluginInstance($contentObject->data);
         } else {
             throw new \InvalidArgumentException('VICI frontend plugin not found!');
         }
 
-        $pageInformation = $this->request->getAttribute('frontend.page.information');
-        if ($pageInformation instanceof PageInformation) {
-            $this->view->assign('pageInformation', $pageInformation);
+        if (!$this->frontendPlugin->getViciTableUid()) {
+            throw new \InvalidArgumentException('No vici table defined in content element with uid ' . $this->frontendPlugin->getUid());
         }
 
-        if (!$frontendPlugin->getViciTableUid()) {
-            throw new \InvalidArgumentException('No vici table defined in content element with uid ' . $frontendPlugin->getUid());
+        // Check VICI configuration and configure viciFrontendRepository
+        $this->tableRow = $this->viciRepository->findTableByUid($this->frontendPlugin->getViciTableUid()) ?? [];
+        if (empty($this->tableRow) || $this->tableRow['hidden']) {
+            throw new \InvalidArgumentException('Vici table with uid ' . $this->frontendPlugin->getViciTableUid() . ' not found or hidden!');
         }
-
-        $tableRow = $this->viciRepository->findTableByUid($frontendPlugin->getViciTableUid());
-        if (!$tableRow || $tableRow['hidden']) {
-            return $this->getErrorHtmlResponse('Vici table with uid ' . $frontendPlugin->getViciTableUid() . ' not found or hidden!');
-        }
-        $tableColumns = $this->viciRepository->findTableColumnsByTableUid($tableRow['uid']);
+        $tableColumns = $this->viciRepository->findTableColumnsByTableUid($this->tableRow['uid']);
         if (empty($tableColumns)) {
-            return $this->getErrorHtmlResponse('Vici table with uid ' . $frontendPlugin->getViciTableUid() . ' has no columns configured!');
+            throw new \InvalidArgumentException('Vici table with uid ' . $this->frontendPlugin->getViciTableUid() . ' has no columns configured!');
         }
 
         /** @var class-string<GenericViciModel> $className */
-        $className = $this->staticValues->getProxyClassNamespace(GeneralUtility::underscoredToUpperCamelCase($tableRow['name']));
+        $className = $this->staticValues->getProxyClassNamespace(GeneralUtility::underscoredToUpperCamelCase($this->tableRow['name']));
         $this->viciFrontendRepository->setObjectType($className);
-        if (!empty($tableRow['enable_column_sorting'])) {
+    }
+
+    protected function resolveView(): FluidStandaloneViewInterface|ViewInterface
+    {
+        $view = parent::resolveView();
+
+        $view->assign('frontendPlugin', $this->frontendPlugin);
+
+        $pageInformation = $this->request->getAttribute('frontend.page.information');
+        if ($pageInformation instanceof PageInformation) {
+            $view->assign('pageInformation', $pageInformation);
+        }
+
+        return $view;
+    }
+
+    public function indexAction(int $currentPageNumber = 1): ResponseInterface
+    {
+        if (!empty($this->tableRow['enable_column_sorting'])) {
             $this->viciFrontendRepository->setDefaultOrderings(['sorting' => 'ASC']);
         }
 
         $records = $this->viciFrontendRepository->findAll();
 
-        if ($frontendPlugin->isPaginationEnabled()) {
+        if ($this->frontendPlugin->isPaginationEnabled()) {
             /** @var QueryResultPaginator $paginator */
-            $paginator = GeneralUtility::makeInstance(QueryResultPaginator::class, $records, $currentPageNumber, $frontendPlugin->getPaginationItemsPerPage());
-            $pagination = GeneralUtility::makeInstance($frontendPlugin->getPaginationType(), $paginator, $frontendPlugin->getPaginationMaxLinks());
+            $paginator = GeneralUtility::makeInstance(QueryResultPaginator::class, $records, $currentPageNumber, $this->frontendPlugin->getPaginationItemsPerPage());
+            $pagination = GeneralUtility::makeInstance($this->frontendPlugin->getPaginationType(), $paginator, $this->frontendPlugin->getPaginationMaxLinks());
             $this->view->assign('currentPageNumber', $currentPageNumber);
             $this->view->assign('pagination', $pagination);
             $this->view->assign('records', $paginator->getPaginatedItems());
@@ -76,7 +96,24 @@ class FrontendController extends ActionController
 
         /** @var FluidViewAdapter $fluidViewAdapter */
         $fluidViewAdapter = $this->view;
-        $fluidViewAdapter->getRenderingContext()->getTemplatePaths()->setTemplateSource($frontendPlugin->getViciTemplate());
+        $fluidViewAdapter->getRenderingContext()->getTemplatePaths()->setTemplateSource($this->frontendPlugin->getViciTemplate());
+
+        return $this->htmlResponse();
+    }
+
+    public function showAction(int $uid): ResponseInterface
+    {
+        if (!$this->frontendPlugin->isDetailpageEnabled()) {
+            return $this->getErrorHtmlResponse('Page not found.');
+        }
+
+        /** @var GenericViciModel|null $record */
+        $record = $this->viciFrontendRepository->findByUid($uid);
+        $this->view->assign('record', $record);
+
+        /** @var FluidViewAdapter $fluidViewAdapter */
+        $fluidViewAdapter = $this->view;
+        $fluidViewAdapter->getRenderingContext()->getTemplatePaths()->setTemplateSource($this->frontendPlugin->getViciDetailpageTemplate());
 
         return $this->htmlResponse();
     }

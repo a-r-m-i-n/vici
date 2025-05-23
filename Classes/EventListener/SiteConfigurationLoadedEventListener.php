@@ -4,6 +4,8 @@ namespace T3\Vici\EventListener;
 
 use T3\Vici\FrontendPlugin\FrontendPlugin;
 use T3\Vici\FrontendPlugin\FrontendPluginRepository;
+use T3\Vici\Generator\StaticValues;
+use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
 use TYPO3\CMS\Core\Configuration\Event\SiteConfigurationLoadedEvent;
 
@@ -12,8 +14,11 @@ use TYPO3\CMS\Core\Configuration\Event\SiteConfigurationLoadedEvent;
 )]
 readonly class SiteConfigurationLoadedEventListener
 {
-    public function __construct(private FrontendPluginRepository $frontendPluginRepository)
-    {
+    public function __construct(
+        private FrontendPluginRepository $frontendPluginRepository,
+        private ViciRepository $viciRepository,
+        private StaticValues $staticValues,
+    ) {
     }
 
     public function __invoke(SiteConfigurationLoadedEvent $event): void
@@ -83,6 +88,33 @@ readonly class SiteConfigurationLoadedEventListener
                         'type' => 'StaticRangeMapper',
                         'start' => '1',
                         'end' => '1000',
+                    ],
+                ],
+            ];
+        }
+
+        if ($frontendPlugin->isDetailpageEnabled() && $frontendPlugin->getSlugColumn()) {
+            $viciTable = $this->viciRepository->findTableByUid($frontendPlugin->getViciTableUid());
+            $viciTableName = $this->staticValues->getFullTableName($viciTable['name'] ?? '');
+            $slugColumn = $this->viciRepository->findTableColumnByUid($frontendPlugin->getSlugColumn());
+
+            $configuration['routeEnhancers']['viciDetailpage' . $frontendPlugin->getUid()] = [
+                'type' => 'Extbase',
+                'extension' => 'Vici',
+                'plugin' => 'Frontend',
+                'routes' => [
+                    [
+                        'routePath' => '/{title}',
+                        '_controller' => 'Frontend::show',
+                        '_arguments' => ['title' => 'uid'],
+                    ],
+                ],
+                'defaultController' => 'Frontend::show',
+                'aspects' => [
+                    'title' => [
+                        'type' => 'PersistedAliasMapper',
+                        'tableName' => $viciTableName,
+                        'routeFieldName' => $slugColumn['name'] ?? '',
                     ],
                 ],
             ];
