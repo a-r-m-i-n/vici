@@ -56,6 +56,7 @@ readonly class AfterGroupsResolvedEventListener
                 'tables_select' => implode(',', $viciTables),
                 'tables_modify' => implode(',', $viciTables),
                 'non_exclude_fields' => implode(',', $nonExcludeFields),
+                'category_perms' => [],
             ];
 
             $groups[] = $virtualGroup;

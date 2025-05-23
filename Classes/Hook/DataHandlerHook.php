@@ -12,11 +12,11 @@ readonly class DataHandlerHook implements SingletonInterface
     }
 
     /**
-     * @param array{cacheCmd: string, tags: string[]} $params
+     * @param array<string, mixed> $params
      */
     public function clearCachePostProc(array $params): void
     {
-        if ('all' === $params['cacheCmd']) {
+        if ('all' === ($params['cacheCmd'] ?? null)) {
             $this->viciManager->clearAll();
             $this->viciManager->generateAll();
         }
