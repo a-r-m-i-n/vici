@@ -268,6 +268,7 @@ return [
             'config' => [
                 'type' => 'check',
             ],
+            'onChange' => 'reload',
         ],
     ],
 ];

@@ -86,7 +86,7 @@ enum FieldTypes: string
     {
         $palettes = [
             // Common palettes (used for all field types)
-            'general_header' => ['showitem' => 'type,excluded,--linebreak--,name,title'],
+            'general_header' => ['showitem' => 'type,excluded,l10n_mode_exclude,--linebreak--,name,title'],
         ];
 
         foreach (self::list() as $fieldType) {
@@ -153,6 +153,31 @@ enum FieldTypes: string
                 'config' => [
                     'type' => 'check',
                 ],
+            ],
+            'l10n_mode_exclude' => [
+                'exclude' => false,
+                'label' => 'Translatable',
+                'description' => 'Defines if this field is translatable and how it behaves in translated records',
+                'config' => [
+                    'type' => 'select',
+                    'renderType' => 'selectSingle',
+                    'items' => [
+                        [
+                            'label' => 'Yes',
+                            'value' => 0,
+                        ],
+                        [
+                            'label' => 'No, hide the field',
+                            'value' => 1,
+                        ],
+                        [
+                            'label' => 'No, but show the default contents as read-only field',
+                            'value' => 2,
+                        ],
+                    ],
+                    'default' => 0,
+                ],
+                'displayCond' => 'USER:T3\\Vici\\UserFunction\\DisplayCondition\\ParentTableIsTranslatable->check',
             ],
             'parent' => [
                 'exclude' => false,

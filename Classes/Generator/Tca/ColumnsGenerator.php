@@ -25,6 +25,16 @@ class ColumnsGenerator extends AbstractPhpCodeGenerator
             ];
             $tca['config']['type'] = $instance->getType();
 
+            // Translatable options
+            if (!empty($this->table['enable_column_languages'])) {
+                if ($tableColumn['l10n_mode_exclude'] > 0) {
+                    $tca['l10n_mode'] = 'exclude';
+                }
+                if (2 === $tableColumn['l10n_mode_exclude']) {
+                    $tca['l10n_display'] = 'defaultAsReadonly';
+                }
+            }
+
             if (!empty($tableColumn['additional_config'])) {
                 $additionalConfig = json_decode($tableColumn['additional_config'], true);
                 if (!empty($additionalConfig) && is_array($additionalConfig)) {
