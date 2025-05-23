@@ -7,7 +7,7 @@
 <f:layout name="Module" />
 
 <f:section name="Content">
-    <f:render partial="ViciHeader" />
+    <f:render partial="Backend/ViciHeader" />
 
     <f:if condition="{tableRows -> f:count()} > 0">
         <f:then>
@@ -31,7 +31,7 @@
                     <f:for each="{row.tableRows}" as="tableRow">
                         <tr>
                             <td>
-                                <f:link.action action="edit" arguments="{tableUid:tableRow.uid}"><f:render partial="TableRow/NameAndIcon" arguments="{tableRow:tableRow}" /></f:link.action>
+                                <f:link.action action="edit" arguments="{tableUid:tableRow.uid}"><f:render partial="Backend/TableRow/NameAndIcon" arguments="{tableRow:tableRow}" /></f:link.action>
                             </td>
                             <td class="w-50">
                                 <f:if condition="{row.pageRow.hidden} == 0 && {tableRow.hidden} == 0">
