@@ -163,4 +163,23 @@ class ViciRepository
 
         return $columns;
     }
+
+    /**
+     * @return array<string, mixed>|null Table row
+     */
+    public function findTableColumnByUid(int $tableColumnUid): ?array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_COLUMN);
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLENAME_COLUMN)
+            ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($tableColumnUid, Connection::PARAM_INT)))
+        ;
+
+        if ($row = $queryBuilder->executeQuery()->fetchAssociative()) {
+            return $row;
+        }
+
+        return null;
+    }
 }

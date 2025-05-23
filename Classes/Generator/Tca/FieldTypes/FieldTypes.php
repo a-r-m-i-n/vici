@@ -4,6 +4,7 @@ namespace T3\Vici\Generator\Tca\FieldTypes;
 
 use T3\Vici\UserFunction\TcaFieldValidator\LeadingLetterValidator;
 use T3\Vici\UserFunction\TcaFieldValidator\ReservedTcaColumnsValidator;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 enum FieldTypes: string
 {
@@ -40,7 +41,7 @@ enum FieldTypes: string
         $className = $namespace . ucfirst($this->value) . 'FieldType';
         if (class_exists($className)) {
             /** @var AbstractFieldType $instance */
-            $instance = new $className();
+            $instance = GeneralUtility::makeInstance($className);
 
             return $instance;
         }
