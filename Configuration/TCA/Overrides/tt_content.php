@@ -2,9 +2,28 @@
 
 use T3\Vici\UserFunction\ItemsProcFunc\AvailableViciTables;
 use T3\Vici\UserFunction\PreviewRenderer\ViciFrontendPlugin;
+use TYPO3\CMS\Core\Utility\ExtensionManagementUtility;
 use TYPO3\CMS\Extbase\Utility\ExtensionUtility;
 
-// Vici Frontend Content Element
+// VICI Frontend Plugin
+$pluginIdentifier = ExtensionUtility::registerPlugin(
+    'vici',
+    'Frontend',
+    'VICI Frontend Plugin',
+    'vici-extension-icon',
+    'plugins',
+    'Output custom table contents made by EXT:vici',
+);
+
+ExtensionManagementUtility::addToAllTCAtypes(
+    'tt_content',
+    '--div--;VICI Records,tx_vici_table,pages,recursive,tx_vici_options,--div--;VICI Templates,tx_vici_template',
+    $pluginIdentifier,
+    'after:palette:headers'
+);
+
+$GLOBALS['TCA']['tt_content']['types'][$pluginIdentifier]['previewRenderer'] = ViciFrontendPlugin::class;
+
 $newColumns = [
     'tx_vici_table' => [
         'label' => 'VICI Table',
@@ -16,6 +35,16 @@ $newColumns = [
             'maxitems' => 1,
         ],
     ],
+    'tx_vici_options' => [
+        'label' => 'VICI options',
+        'l10n_mode' => 'exclude',
+        'config' => [
+            'type' => 'flex',
+            'ds' => [
+                'default' => 'FILE:EXT:vici/Configuration/FlexForms/ViciFrontendPlugin.xml',
+            ],
+        ],
+    ],
     'tx_vici_template' => [
         'label' => 'VICI Template',
         'config' => [
@@ -25,22 +54,4 @@ $newColumns = [
         ],
     ],
 ];
-TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('tt_content', $newColumns);
-
-$pluginIdentifier = ExtensionUtility::registerPlugin(
-    'vici',
-    'Frontend',
-    'VICI Frontend Plugin',
-    'vici-extension-icon',
-    'plugins',
-    'Output custom table contents made by EXT:vici',
-);
-
-TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-    'tt_content',
-    '--div--;VICI Records,tx_vici_table,pages,recursive,--div--;VICI Templates,tx_vici_template',
-    $pluginIdentifier,
-    'after:palette:headers'
-);
-
-$GLOBALS['TCA']['tt_content']['types'][$pluginIdentifier]['previewRenderer'] = ViciFrontendPlugin::class;
+ExtensionManagementUtility::addTCAcolumns('tt_content', $newColumns);

@@ -1,0 +1,82 @@
+<T3DataStructure>
+    <sheets>
+        <sDEF>
+            <ROOT>
+                <sheetTitle>General</sheetTitle>
+                <type>array</type>
+                <el>
+                    <settings.enablePagination>
+                        <label>Enable pagination</label>
+                        <config>
+                            <type>check</type>
+                        </config>
+                        <onChange>reload</onChange>
+                    </settings.enablePagination>
+                </el>
+            </ROOT>
+        </sDEF>
+        <pagination>
+            <ROOT>
+                <sheetTitle>Pagination</sheetTitle>
+                <type>array</type>
+                <el>
+                    <settings.paginationType>
+                        <label>Type</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <items type="array">
+                                <numIndex index="0">
+                                    <label>Simple pagination</label>
+                                    <value>simple</value>
+                                </numIndex>
+                                <numIndex index="1" type="array">
+                                    <label>Sliding window pagination</label>
+                                    <value>slidingWindow</value>
+                                </numIndex>
+                            </items>
+                            <default>simple</default>
+                            <size>1</size>
+                            <minitems>1</minitems>
+                            <maxitems>1</maxitems>
+                        </config>
+                        <onChange>reload</onChange>
+                        <displayCond>FIELD:sDEF.settings.enablePagination:=:1</displayCond>
+                    </settings.paginationType>
+                    <settings.paginationItemsPerPage>
+                        <label>Items per page</label>
+                        <config>
+                            <type>number</type>
+                            <format>integer</format>
+                            <default>10</default>
+                            <size>10</size>
+                        </config>
+                        <displayCond>FIELD:sDEF.settings.enablePagination:=:1</displayCond>
+                    </settings.paginationItemsPerPage>
+                    <settings.paginationSlidingWindowMaxLinks>
+                        <label>Max links</label>
+                        <config>
+                            <type>number</type>
+                            <format>integer</format>
+                            <default>5</default>
+                            <size>10</size>
+                        </config>
+                        <displayCond>
+                            <and>
+                                <value1>FIELD:sDEF.settings.enablePagination:=:1</value1>
+                                <value2>FIELD:pagination.settings.paginationType:=:slidingWindow</value2>
+                            </and>
+                        </displayCond>
+                    </settings.paginationSlidingWindowMaxLinks>
+                    <settings.paginationShowPrevNextArrows>
+                        <label>Display "previous" and "next" arrows</label>
+                        <config>
+                            <type>check</type>
+                        </config>
+                        <displayCond>FIELD:sDEF.settings.enablePagination:=:1</displayCond>
+                    </settings.paginationShowPrevNextArrows>
+                </el>
+            </ROOT>
+        </pagination>
+    </sheets>
+</T3DataStructure>
