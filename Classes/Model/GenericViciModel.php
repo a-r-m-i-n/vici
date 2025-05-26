@@ -13,6 +13,15 @@ abstract class GenericViciModel extends AbstractEntity
 
     public string $_tablename = '';
 
+    public function getUid(): ?int
+    {
+        if ($this->_localizedUid) {
+            return $this->_localizedUid;
+        }
+
+        return parent::getUid();
+    }
+
     public function __toString(): string
     {
         $labelField = $GLOBALS['TCA'][$this->_tablename]['ctrl']['label'] ?? null;
