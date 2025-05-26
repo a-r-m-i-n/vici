@@ -120,6 +120,17 @@ readonly class SiteConfigurationLoadedEventListener
             ];
         }
 
+        uksort($configuration['routeEnhancers'], static function (string $a, string $b) {
+            if ('viciPagination' === $a && str_starts_with($b, 'viciDetailpage')) {
+                return -1;
+            }
+            if ('viciPagination' === $b && str_starts_with($a, 'viciDetailpage')) {
+                return 1;
+            }
+
+            return 0;
+        });
+
         return $configuration;
     }
 }
