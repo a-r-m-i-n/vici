@@ -2,8 +2,8 @@
 
 namespace T3\Vici\FrontendPlugin;
 
+use Doctrine\DBAL\ParameterType;
 use TYPO3\CMS\Core\Database\ConnectionPool;
-use TYPO3\CMS\Core\Database\Query\Restriction\HiddenRestriction;
 use TYPO3\CMS\Core\Service\FlexFormService;
 
 readonly class FrontendPluginRepository
@@ -20,11 +20,13 @@ readonly class FrontendPluginRepository
     public function findAll(): array
     {
         $queryBuilder = $this->databaseConnectionPool->getQueryBuilderForTable('tt_content');
-        $queryBuilder->getRestrictions()->removeAll()->add(new HiddenRestriction());
 
         $rows = $queryBuilder->select('*')
             ->from('tt_content')
             ->where($queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('vici_frontend')))
+            ->andWhere($queryBuilder->expr()->eq('l18n_parent', $queryBuilder->createNamedParameter(0, ParameterType::INTEGER)))
+            ->orderBy('pid')
+            ->addOrderBy('sys_language_uid')
             ->executeQuery()
             ->fetchAllAssociative()
         ;
@@ -35,6 +37,24 @@ readonly class FrontendPluginRepository
         }
 
         return $pluginInstances;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>>
+     */
+    public function findTranslations(FrontendPlugin $frontendPlugin): array
+    {
+        $queryBuilder = $this->databaseConnectionPool->getQueryBuilderForTable('tt_content');
+
+        return $queryBuilder->select('*')
+            ->from('tt_content')
+            ->where($queryBuilder->expr()->eq('CType', $queryBuilder->createNamedParameter('vici_frontend')))
+            ->andWhere($queryBuilder->expr()->eq('l18n_parent', $queryBuilder->createNamedParameter($frontendPlugin->getUid(), ParameterType::INTEGER)))
+            ->orderBy('pid')
+            ->addOrderBy('sys_language_uid')
+            ->executeQuery()
+            ->fetchAllAssociative()
+        ;
     }
 
     /**

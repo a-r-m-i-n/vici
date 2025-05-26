@@ -100,6 +100,31 @@
                         </config>
                         <displayCond>FIELD:sDEF.settings.enableDetailpage:=:1</displayCond>
                     </settings.slugColumn>
+                    <settings.enableXmlSitemap>
+                        <label>Enable XML sitemap</label>
+                        <description>If enabled, adds the record's detail pages to XML sitemap. EXT:seo must be installed and XML sitemaps properly set up.</description>
+                        <config>
+                            <type>check</type>
+                        </config>
+                        <onChange>reload</onChange>
+                        <displayCond>FIELD:sDEF.settings.enableDetailpage:=:1</displayCond>
+                    </settings.enableXmlSitemap>
+                    <settings.xmlSitemapIdentifier>
+                        <label>XML sitemap identifier</label>
+                        <description>The identifier used in URL of sitemap. Must be unique for the site.</description>
+                        <config>
+                            <type>input</type>
+                            <required>true</required>
+                            <eval>trim,alphanum_x,T3\Vici\UserFunction\TcaFieldValidator\XmlIdentifierUniqueInSiteValidator</eval>
+                        </config>
+                        <onChange>reload</onChange>
+                        <displayCond>
+                            <and>
+                                <value1>FIELD:sDEF.settings.enableDetailpage:=:1</value1>
+                                <value2>FIELD:detailpage.settings.enableXmlSitemap:=:1</value2>
+                            </and>
+                        </displayCond>
+                    </settings.xmlSitemapIdentifier>
                 </el>
             </ROOT>
         </detailpage>

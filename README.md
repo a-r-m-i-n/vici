@@ -17,7 +17,6 @@ No programming skills are required.
 
 * Detailpage
   * [ ] Page title Provider
-  * [ ] XML Sitemap Provider
 * [ ] Field types implementation
 * [ ] Translations (in TCA)
 * [ ] New form node type: Translatable input

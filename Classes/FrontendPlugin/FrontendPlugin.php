@@ -86,7 +86,17 @@ readonly class FrontendPlugin
 
     public function getSlugColumn(): ?int
     {
-        return $this->options['slugColumn'] ?? null;
+        return !empty($this->options['slugColumn']) ? $this->options['slugColumn'] : null;
+    }
+
+    public function isXmlSitemapEnabled(): bool
+    {
+        return $this->options['enableXmlSitemap'] ?? false;
+    }
+
+    public function getXmlSitemapIdentifier(): string
+    {
+        return $this->options['xmlSitemapIdentifier'] ?? '';
     }
 
     // Rootline check

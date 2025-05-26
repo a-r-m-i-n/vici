@@ -243,6 +243,7 @@ return [
             'description' => 'Adds creation and last update timestamps to database.',
             'config' => [
                 'type' => 'check',
+                'default' => true,
             ],
         ],
         'enable_column_versioning' => [
