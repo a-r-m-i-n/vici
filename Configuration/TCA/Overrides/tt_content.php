@@ -17,7 +17,7 @@ $pluginIdentifier = ExtensionUtility::registerPlugin(
 
 ExtensionManagementUtility::addToAllTCAtypes(
     'tt_content',
-    '--div--;VICI Records,tx_vici_table,pages,recursive,tx_vici_options,--div--;VICI Templates,tx_vici_template,tx_vici_template_detail',
+    '--div--;VICI records,tx_vici_table,tx_vici_options,pages,recursive,--div--;VICI template,tx_vici_template,--div--;VICI detail template,tx_vici_template_detail',
     $pluginIdentifier,
     'after:palette:headers'
 );
@@ -27,6 +27,8 @@ $GLOBALS['TCA']['tt_content']['types'][$pluginIdentifier]['previewRenderer'] = V
 $newColumns = [
     'tx_vici_table' => [
         'label' => 'VICI table',
+        'l10n_mode' => 'exclude',
+        'l10n_display' => 'defaultAsReadonly',
         'config' => [
             'type' => 'select',
             'renderType' => 'selectSingle',

@@ -28,6 +28,11 @@ readonly class FrontendPlugin
         return $this->row['pid'];
     }
 
+    public function isTranslation(): bool
+    {
+        return 0 !== $this->row['l18n_parent'];
+    }
+
     public function getViciTableUid(): int
     {
         return $this->row['tx_vici_table'] ?? 0;
