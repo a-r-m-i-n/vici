@@ -100,6 +100,53 @@
                         </config>
                         <displayCond>FIELD:sDEF.settings.enableDetailpage:=:1</displayCond>
                     </settings.slugColumn>
+                    <settings.pageTitleMode>
+                        <label>Adjust page title on detail page</label>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <items type="array">
+                                <numIndex index="0">
+                                    <label>No, keep it as it is</label>
+                                    <value></value>
+                                </numIndex>
+                                <numIndex index="1" type="array">
+                                    <label>Yes, prepend the following field value</label>
+                                    <value>prepend</value>
+                                </numIndex>
+                                <numIndex index="2" type="array">
+                                    <label>Yes, append the following field value</label>
+                                    <value>append</value>
+                                </numIndex>
+                                <numIndex index="3" type="array">
+                                    <label>Yes, replace the whole title with the following field value</label>
+                                    <value>replace</value>
+                                </numIndex>
+                            </items>
+                            <default>keep</default>
+                            <size>1</size>
+                            <minitems>1</minitems>
+                            <maxitems>1</maxitems>
+                        </config>
+                        <onChange>reload</onChange>
+                        <displayCond>FIELD:sDEF.settings.enableDetailpage:=:1</displayCond>
+                    </settings.pageTitleMode>
+                    <settings.pageTitleColumn>
+                        <label>Page title column</label>
+                        <description>Defines which column should be used for custom page title.</description>
+                        <config>
+                            <type>select</type>
+                            <renderType>selectSingle</renderType>
+                            <itemsProcFunc>T3\Vici\UserFunction\ItemsProcFunc\AvailableViciColumnsInFlexForm->get</itemsProcFunc>
+                        </config>
+                        <displayCond>
+                            <and>
+                                <value1>FIELD:sDEF.settings.enableDetailpage:=:1</value1>
+                                <value2>FIELD:detailpage.settings.pageTitleMode:IN:prepend,append,replace</value2>
+                            </and>
+                        </displayCond>
+                    </settings.pageTitleColumn>
+
                     <settings.enableXmlSitemap>
                         <label>Enable XML sitemap</label>
                         <description>If enabled, adds the record's detail pages to XML sitemap. EXT:seo must be installed and XML sitemaps properly set up.</description>

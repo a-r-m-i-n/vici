@@ -5,6 +5,7 @@ namespace T3\Vici\Controller;
 use Psr\Http\Message\ResponseInterface;
 use T3\Vici\FrontendPlugin\FrontendPlugin;
 use T3\Vici\FrontendPlugin\FrontendPluginRepository;
+use T3\Vici\FrontendPlugin\PageTitleProvider;
 use T3\Vici\Generator\StaticValues;
 use T3\Vici\Model\GenericViciModel;
 use T3\Vici\Repository\ViciFrontendRepository;
@@ -110,6 +111,12 @@ class FrontendController extends ActionController
         /** @var GenericViciModel|null $record */
         $record = $this->viciFrontendRepository->findByUid($uid);
         $this->view->assign('record', $record);
+
+        if ($record && $this->frontendPlugin->getPageTitleMode() && $this->frontendPlugin->getPageTitleColumnUid()) {
+            /** @var PageTitleProvider $pageTitleProvider */
+            $pageTitleProvider = GeneralUtility::makeInstance(PageTitleProvider::class);
+            $pageTitleProvider->generate($record, $this->frontendPlugin);
+        }
 
         /** @var FluidViewAdapter $fluidViewAdapter */
         $fluidViewAdapter = $this->view;

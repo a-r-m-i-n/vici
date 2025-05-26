@@ -94,6 +94,20 @@ readonly class FrontendPlugin
         return !empty($this->options['slugColumn']) ? $this->options['slugColumn'] : null;
     }
 
+    public function getPageTitleMode(): ?string
+    {
+        return !empty($this->options['pageTitleMode']) ? $this->options['pageTitleMode'] : null;
+    }
+
+    public function getPageTitleColumnUid(): ?int
+    {
+        if ('keep' === $this->getPageTitleMode()) {
+            return null;
+        }
+
+        return !empty($this->options['pageTitleColumn']) ? $this->options['pageTitleColumn'] : null;
+    }
+
     public function isXmlSitemapEnabled(): bool
     {
         return $this->options['enableXmlSitemap'] ?? false;

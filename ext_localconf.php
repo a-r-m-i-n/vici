@@ -31,3 +31,16 @@ ExtensionUtility::configurePlugin(
     [],
     ExtensionUtility::PLUGIN_TYPE_CONTENT_ELEMENT
 );
+
+// Add global Typoscript
+\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTypoScript('vici', 'setup', <<<TYPOSCRIPT
+config.pageTitleProviders.vici {
+    provider = T3\Vici\FrontendPlugin\PageTitleProvider
+    before = record
+    after = altPageTitle
+
+    prependWrap = || - |
+    appendWrap = | - ||
+}
+TYPOSCRIPT
+);

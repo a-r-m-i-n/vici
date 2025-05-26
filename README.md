@@ -15,8 +15,6 @@ No programming skills are required.
 
 ## Development Roadmap
 
-* Detailpage
-  * [ ] Page title Provider
 * [ ] Field types implementation
 * [ ] Translations (in TCA)
 * [ ] New form node type: Translatable input
