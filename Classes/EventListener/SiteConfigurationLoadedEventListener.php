@@ -93,10 +93,10 @@ readonly class SiteConfigurationLoadedEventListener
             ];
         }
 
-        if ($frontendPlugin->isDetailpageEnabled() && $frontendPlugin->getSlugColumn()) {
+        if ($frontendPlugin->isDetailpageEnabled() && $frontendPlugin->getSlugColumnUid()) {
             $viciTable = $this->viciRepository->findTableByUid($frontendPlugin->getViciTableUid());
             $viciTableName = $this->staticValues->getFullTableName($viciTable['name'] ?? '');
-            $slugColumn = $this->viciRepository->findTableColumnByUid($frontendPlugin->getSlugColumn());
+            $slugColumn = $this->viciRepository->findTableColumnByUid($frontendPlugin->getSlugColumnUid());
 
             $configuration['routeEnhancers']['viciDetailpage' . $frontendPlugin->getUid()] = [
                 'type' => 'Extbase',

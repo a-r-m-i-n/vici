@@ -89,7 +89,7 @@ readonly class FrontendPlugin
         return $this->options['enableDetailpage'] ?? false;
     }
 
-    public function getSlugColumn(): ?int
+    public function getSlugColumnUid(): ?int
     {
         return !empty($this->options['slugColumn']) ? $this->options['slugColumn'] : null;
     }
