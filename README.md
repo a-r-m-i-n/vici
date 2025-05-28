@@ -17,5 +17,4 @@ No programming skills are required.
 
 * [ ] Field types implementation
 * [ ] Translations (in TCA)
-* [ ] New form node type: Translatable input
 * [ ] Configurable Palettes and Types

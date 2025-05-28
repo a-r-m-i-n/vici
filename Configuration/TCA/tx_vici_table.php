@@ -126,10 +126,8 @@ return [
             'label' => 'Title',
             'description' => 'Title of the table, being displayed in backend',
             'config' => [
-                'type' => 'input',
-                'size' => 30,
-                'required' => false,
-                'eval' => 'trim',
+                'type' => 'user',
+                'renderType' => 'viciTranslatableInput',
             ],
         ],
         'icon' => [

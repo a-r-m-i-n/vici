@@ -4,6 +4,8 @@ namespace T3\Vici\Generator\Tca;
 
 use T3\Vici\Generator\AbstractPhpCodeGenerator;
 use T3\Vici\Generator\Tca\FieldTypes\FieldTypes;
+use T3\Vici\Localization\TranslationRepository;
+use T3\Vici\Repository\ViciRepository;
 
 class ColumnsGenerator extends AbstractPhpCodeGenerator
 {
@@ -20,7 +22,7 @@ class ColumnsGenerator extends AbstractPhpCodeGenerator
 
             $tca = [
                 'exclude' => (bool)$tableColumn['excluded'],
-                'label' => $tableColumn['title'],
+                'label' => TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'title'),
                 'config' => $instance->buildTcaConfig($tableColumn),
             ];
             $tca['config']['type'] = $instance->getType();

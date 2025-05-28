@@ -30,3 +30,6 @@ services:
 
     T3\Vici\Generator\ProxyClassLoader:
         public: true
+
+    T3\Vici\Localization\ViciParser:
+        public: true

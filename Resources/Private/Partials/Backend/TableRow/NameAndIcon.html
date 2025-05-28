@@ -13,7 +13,10 @@
     </div>
     <div class="ms-1">
         <f:if condition="{tableRow.title}">
-            <f:then>{tableRow.title} ({tableRow.name})</f:then>
+            <f:then>
+                <f:translate key="LLL:EXT:vici/Resources/Private/Language/translate.vici:tx_vici_table|{tableRow.uid}|title"> +++ {tableRow.title} +++</f:translate>
+                ({tableRow.name})
+            </f:then>
             <f:else>{tableRow.name}</f:else>
         </f:if>
     </div>

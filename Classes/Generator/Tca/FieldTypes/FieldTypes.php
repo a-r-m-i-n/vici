@@ -141,10 +141,9 @@ enum FieldTypes: string
                 'label' => 'Title',
                 'description' => 'Title of field, being displayed in backend',
                 'config' => [
-                    'type' => 'input',
-                    'size' => 30,
+                    'type' => 'user',
+                    'renderType' => 'viciTranslatableInput',
                     'required' => true,
-                    'eval' => 'trim',
                 ],
             ],
             'excluded' => [

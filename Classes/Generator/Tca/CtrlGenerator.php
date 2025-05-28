@@ -3,6 +3,8 @@
 namespace T3\Vici\Generator\Tca;
 
 use T3\Vici\Generator\AbstractPhpCodeGenerator;
+use T3\Vici\Localization\TranslationRepository;
+use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class CtrlGenerator extends AbstractPhpCodeGenerator
@@ -14,7 +16,7 @@ class CtrlGenerator extends AbstractPhpCodeGenerator
         $data['groupName'] = 'tx_vici_custom';
 
         // Title
-        $data['title'] = $this->table['title'] ?? '';
+        $data['title'] = TranslationRepository::getLL(ViciRepository::TABLENAME_TABLE, $this->table['uid'], 'title');
         if (empty($data['title'])) {
             $data['title'] = GeneralUtility::underscoredToUpperCamelCase($this->table['name']);
         }
