@@ -16,7 +16,7 @@ class ColumnsGenerator extends AbstractPhpCodeGenerator
         foreach ($this->tableColumns as $tableColumn) {
             $fieldType = FieldTypes::from($tableColumn['type']);
             $instance = $fieldType->getInstance();
-            if (!$instance) {
+            if (!$instance || empty($tableColumn['name'])) {
                 continue;
             }
 
