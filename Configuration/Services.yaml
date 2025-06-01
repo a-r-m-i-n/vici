@@ -21,7 +21,7 @@ services:
         resource: '../Classes/UserFunction/DisplayCondition/*'
         public: true
 
-    T3\Vici\Generator\TcaManager:
+    T3\Vici\Generator\Extbase\ModelClassNameResolver:
         public: true
 
     T3\Vici\Repository\ViciRepository:

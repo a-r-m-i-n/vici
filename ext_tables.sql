@@ -9,6 +9,11 @@ CREATE TABLE tx_vici_table_column
     title varchar(255) DEFAULT '' NOT NULL
 );
 
+CREATE TABLE tx_vici_table_column_item
+(
+    name varchar(255) DEFAULT '' NOT NULL
+);
+
 
 CREATE TABLE tx_vici_translations
 (

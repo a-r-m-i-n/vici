@@ -58,6 +58,12 @@ class PropertiesGenerator extends AbstractPhpCodeGenerator
         $name = $property->propertyName;
         $typeHint = $property->typeOrClass;
 
+        $phpDoc = '';
+        if (is_array($typeHint)) {
+            $phpDoc = $typeHint[1];
+            $typeHint = 'array';
+        }
+
         if ($property->nullable) {
             $typeHint = '?' . $typeHint;
         }
@@ -67,7 +73,7 @@ class PropertiesGenerator extends AbstractPhpCodeGenerator
             $default = ' = ' . var_export($property->defaultValue, true);
         }
 
-        if ($property->isObjectStorage) {
+        if ($property->isObjectStorage && is_string($property->typeOrClass)) {
             $className = $property->typeOrClass;
 
             return <<<PHP
@@ -76,6 +82,17 @@ class PropertiesGenerator extends AbstractPhpCodeGenerator
                      * @var \TYPO3\CMS\Extbase\Persistence\ObjectStorage<$className>
                      */
                     public \TYPO3\CMS\Extbase\Persistence\ObjectStorage \$$name;
+
+                PHP;
+        }
+
+        if (!empty($phpDoc)) {
+            return <<<PHP
+
+                    /**
+                     * @var $phpDoc
+                     */
+                    public $typeHint \$$name$default;
 
                 PHP;
         }

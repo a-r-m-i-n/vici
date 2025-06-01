@@ -12,6 +12,7 @@ class ViciRepository
 {
     public const TABLENAME_TABLE = 'tx_vici_table';
     public const TABLENAME_COLUMN = 'tx_vici_table_column';
+    public const TABLENAME_ITEM = 'tx_vici_table_column_item';
 
     /**
      * @var array<int, array<string, mixed>> Key is uid of table, value is the table row
@@ -181,5 +182,35 @@ class ViciRepository
         }
 
         return null;
+    }
+
+    /**
+     * @return array<int, array<string, mixed>> Key is the uid of the list item, value the list item row
+     */
+    public function findListItemsByColumnUid(
+        int $tableColumnUid,
+        string $parentColumnName = 'column_select_items',
+        bool $includeHidden = false
+    ): array {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_ITEM);
+        $queryBuilder->getRestrictions()->removeAll();
+        $queryBuilder->getRestrictions()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
+        if (!$includeHidden) {
+            $queryBuilder->getRestrictions()->add(GeneralUtility::makeInstance(HiddenRestriction::class));
+        }
+
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLENAME_ITEM)
+            ->where($queryBuilder->expr()->eq($parentColumnName, $queryBuilder->createNamedParameter($tableColumnUid, Connection::PARAM_INT)))
+            ->orderBy('sorting', 'ASC')
+        ;
+
+        $items = [];
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $column) {
+            $items[$column['uid']] = $column;
+        }
+
+        return $items;
     }
 }
