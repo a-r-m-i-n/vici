@@ -140,7 +140,12 @@ class SelectFieldType extends AbstractFieldType
                     'size' => 15,
                     'default' => 0,
                 ],
-                'displayCond' => 'FIELD:select_render_type:!=:selectSingle',
+                'displayCond' => [
+                    'OR' => [
+                        'FIELD:select_render_type:!=:selectSingle',
+                        'FIELD:type:=:group',
+                    ],
+                ],
             ],
             'select_maxitems' => [
                 'exclude' => false,
@@ -150,7 +155,12 @@ class SelectFieldType extends AbstractFieldType
                     'size' => 15,
                     'default' => 0,
                 ],
-                'displayCond' => 'FIELD:select_render_type:!=:selectSingle',
+                'displayCond' => [
+                    'OR' => [
+                        'FIELD:select_render_type:!=:selectSingle',
+                        'FIELD:type:=:group',
+                    ],
+                ],
             ],
             'add_empty_option' => [
                 'exclude' => false,
@@ -187,7 +197,12 @@ class SelectFieldType extends AbstractFieldType
                     'maxitems' => 1,
                 ],
                 'onChange' => 'reload',
-                'displayCond' => 'FIELD:select_type:=:foreign_table',
+                'displayCond' => [
+                    'OR' => [
+                        'FIELD:select_type:=:foreign_table',
+                        'FIELD:type:=:group',
+                    ],
+                ],
             ],
             'extbase_model_class' => [
                 'exclude' => false,
@@ -200,7 +215,11 @@ class SelectFieldType extends AbstractFieldType
                 ],
                 'displayCond' => [
                     'AND' => [
-                        'FIELD:select_type:=:foreign_table',
+                        'OR' => [
+                            'FIELD:select_type:=:foreign_table',
+                            'FIELD:type:=:group',
+                        ],
+
                         'FIELD:extbase_mapping_mode:=:models',
                     ],
                 ],

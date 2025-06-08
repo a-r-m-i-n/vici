@@ -46,12 +46,13 @@ readonly class AfterObjectThawedEventListener
                         && array_key_exists($tableColumn['name'], $object->_record)
                         && in_array($tableColumn['type'], ['select', 'group', 'inline'], true)
                     ) {
-                        $rawValues = GeneralUtility::trimExplode(',', $object->_record[$tableColumn['name']], true);
+                        $rawValues = GeneralUtility::trimExplode(',', $object->_record[$tableColumn['name']] ?? '', true);
                         $propertyName = GeneralUtility::underscoredToLowerCamelCase($tableColumn['name']);
-                        if ('manual' === $tableColumn['select_type']) {
+                        $foreignTable = $tableColumn['foreign_table'] ?? $tableColumn['group_allowed'];
+                        $foreignTableArray = GeneralUtility::trimExplode(',', $foreignTable, true);
+                        if ('select' === $tableColumn['type'] && 'manual' === $tableColumn['select_type']) {
                             $object->$propertyName = $rawValues;
-                        } elseif (!empty($tableColumn['foreign_table'])) {
-                            $foreignTable = $tableColumn['foreign_table'];
+                        } elseif (!empty($foreignTable) && 1 === count($foreignTableArray)) {
                             if (('models' === $tableColumn['extbase_mapping_mode']) && !empty($tableColumn['extbase_model_class'])) {
                                 $fqcn = '\\' . ltrim($tableColumn['extbase_model_class'], '\\');
                                 if (class_exists($fqcn)) {
@@ -75,6 +76,42 @@ readonly class AfterObjectThawedEventListener
                             }
 
                             $isMultiple = 'selectSingle' !== $tableColumn['select_render_type'];
+                            if ('group' === $tableColumn['type']) {
+                                $isMultiple = true;
+                            }
+                            if ($isMultiple && 1 === $tableColumn['select_maxitems']) {
+                                $isMultiple = false;
+                            }
+
+                            if (!$isMultiple) {
+                                // Only get first item
+                                $rows = reset($rows) ?: [];
+                            }
+
+                            $object->$propertyName = $rows;
+                        } elseif (count($foreignTableArray) > 1) {
+                            // If type:group "allowed" contains more than one table
+                            $rows = [];
+                            foreach ($foreignTableArray as $allowedTable) {
+                                $queryBuilder = $this->connectionPool->getQueryBuilderForTable($allowedTable);
+                                foreach (array_filter($rawValues, fn ($item) => str_starts_with($item, $allowedTable . '_')) as $rawValue) {
+                                    $uid = (int)substr($rawValue, strlen($allowedTable . '_'));
+                                    $row = $queryBuilder
+                                        ->select('*')
+                                        ->from($allowedTable)
+                                        ->where($queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($uid, ParameterType::INTEGER)))
+                                        ->executeQuery()
+                                        ->fetchAssociative();
+                                    if ($row) {
+                                        $rows[$rawValue] = $row;
+                                    }
+                                }
+                            }
+
+                            $isMultiple = 'selectSingle' !== $tableColumn['select_render_type'];
+                            if ('group' === $tableColumn['type']) {
+                                $isMultiple = true;
+                            }
                             if ($isMultiple && 1 === $tableColumn['select_maxitems']) {
                                 $isMultiple = false;
                             }
