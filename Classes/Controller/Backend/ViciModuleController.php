@@ -6,6 +6,7 @@ use Psr\Http\Message\ResponseInterface;
 use T3\Vici\Generator\ViciManager;
 use T3\Vici\Repository\ViciRepository;
 use T3\Vici\Services\DatabaseMigrationService;
+use T3\Vici\Services\ViciTablePermissionService;
 use TYPO3\CMS\Backend\Attribute\AsController;
 use TYPO3\CMS\Backend\Routing\UriBuilder;
 use TYPO3\CMS\Backend\Template\ModuleTemplate;
@@ -30,6 +31,7 @@ class ViciModuleController extends ActionController
         ModuleTemplateFactory $moduleTemplateFactory,
         private readonly UriBuilder $backendUriBuilder,
         private readonly IconFactory $iconFactory,
+        private readonly ViciTablePermissionService $permissionService,
         private readonly ViciRepository $viciRepository,
         private readonly ViciManager $viciManager,
         private readonly DatabaseMigrationService $databaseMigrationService,
@@ -110,7 +112,7 @@ class ViciModuleController extends ActionController
             throw new \UnexpectedValueException('VICI table with uid ' . $tableUid . ' not found!');
         }
 
-        $this->checkUserPermissions($tableRow);
+        $this->permissionService->checkCurrentBackendUserPermissions($tableRow);
 
         $databaseCompareChanges = $this->databaseMigrationService->getRelatedStatements();
         $tableRow = $this->applyDatabaseCompareChanges($tableRow, $databaseCompareChanges);
@@ -130,7 +132,7 @@ class ViciModuleController extends ActionController
             throw new \UnexpectedValueException('VICI table with uid ' . $tableUid . ' not found!');
         }
 
-        $this->checkUserPermissions($tableRow);
+        $this->permissionService->checkCurrentBackendUserPermissions($tableRow);
 
         $this->databaseMigrationService->migrate($selectedHashes);
 
@@ -223,26 +225,6 @@ class ViciModuleController extends ActionController
         $tableRow['_optionalDatabaseCompareChanges'] = $optionalChanges;
 
         return $tableRow;
-    }
-
-    /**
-     * @param array<string, mixed> $tableRow
-     */
-    private function checkUserPermissions(array $tableRow): void
-    {
-        if (0 === $tableRow['pid'] && !$this->backendUser->isAdmin()) {
-            throw new \UnexpectedValueException('You are not allowed to edit VICI table with uid=' . $tableRow['uid'] . ' on root page!');
-        }
-        if (0 !== $tableRow['pid']) {
-            $pageRow = BackendUtility::getRecord('pages', $tableRow['pid']);
-            if ($pageRow) {
-                $pageShow = $this->backendUser->doesUserHaveAccess($pageRow, Permission::PAGE_SHOW);
-                $pageEditContents = $this->backendUser->doesUserHaveAccess($pageRow, Permission::CONTENT_EDIT);
-                if (!$pageShow || !$pageEditContents) {
-                    throw new \UnexpectedValueException('You are not allowed to edit VICI table with uid=' . $tableRow['uid'] . ' on pid=' . $pageRow['uid'] . '!');
-                }
-            }
-        }
     }
 
     private function addModuleButtons(): void
