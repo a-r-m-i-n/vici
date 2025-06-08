@@ -141,7 +141,7 @@ class ViciRepository
             return self::$tableColumnsCache[$tableUid];
         }
         // TODO add caching
-        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_TABLE);
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_COLUMN);
         $queryBuilder->getRestrictions()->removeAll();
         $queryBuilder->getRestrictions()->add(GeneralUtility::makeInstance(DeletedRestriction::class));
         if (!$includeHidden) {
