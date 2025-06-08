@@ -44,17 +44,17 @@ class FrontendController extends ActionController
         }
 
         if (!$this->frontendPlugin->getViciTableUid()) {
-            throw new \InvalidArgumentException('No vici table defined in content element with uid ' . $this->frontendPlugin->getUid());
+            throw new \InvalidArgumentException('No VICI table defined in content element with uid ' . $this->frontendPlugin->getUid());
         }
 
         // Check VICI configuration and configure viciFrontendRepository
         $this->tableRow = $this->viciRepository->findTableByUid($this->frontendPlugin->getViciTableUid()) ?? [];
         if (empty($this->tableRow) || $this->tableRow['hidden']) {
-            throw new \InvalidArgumentException('Vici table with uid ' . $this->frontendPlugin->getViciTableUid() . ' not found or hidden!');
+            throw new \InvalidArgumentException('VICI table with uid ' . $this->frontendPlugin->getViciTableUid() . ' not found or hidden!');
         }
         $tableColumns = $this->viciRepository->findTableColumnsByTableUid($this->tableRow['uid']);
         if (empty($tableColumns)) {
-            throw new \InvalidArgumentException('Vici table with uid ' . $this->frontendPlugin->getViciTableUid() . ' has no columns configured!');
+            throw new \InvalidArgumentException('VICI table with uid ' . $this->frontendPlugin->getViciTableUid() . ' has no columns configured!');
         }
 
         /** @var class-string<GenericViciModel> $className */
@@ -128,7 +128,7 @@ class FrontendController extends ActionController
     private function getErrorHtmlResponse(string $message): ResponseInterface
     {
         $html = <<<HTML
-                <p style="border: 1px solid red; background: #fdd; padding: 1rem;"><strong>Vici Error:</strong> $message</p>
+                <p style="border: 1px solid red; background: #fdd; padding: 1rem;"><strong>VICI Error:</strong> $message</p>
             HTML;
 
         return $this->htmlResponse($html)->withStatus(404);

@@ -7,7 +7,7 @@ use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Authentication\BackendUserAuthentication;
 
 /**
- * Shows only available vici tables, respecting the access permissions of current user.
+ * Shows only available VICI tables, respecting the access permissions of current user.
  */
 readonly class AvailableViciTables
 {

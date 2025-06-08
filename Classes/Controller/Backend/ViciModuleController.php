@@ -107,7 +107,7 @@ class ViciModuleController extends ActionController
     {
         $tableRow = $this->viciRepository->findTableByUid($tableUid);
         if (!$tableRow) {
-            throw new \UnexpectedValueException('Vici table with uid ' . $tableUid . ' not found!');
+            throw new \UnexpectedValueException('VICI table with uid ' . $tableUid . ' not found!');
         }
 
         $this->checkUserPermissions($tableRow);
@@ -127,14 +127,14 @@ class ViciModuleController extends ActionController
     {
         $tableRow = $this->viciRepository->findTableByUid($tableUid);
         if (!$tableRow) {
-            throw new \UnexpectedValueException('Vici table with uid ' . $tableUid . ' not found!');
+            throw new \UnexpectedValueException('VICI table with uid ' . $tableUid . ' not found!');
         }
 
         $this->checkUserPermissions($tableRow);
 
         $this->databaseMigrationService->migrate($selectedHashes);
 
-        $this->addFlashMessage('Database schema successfully updated for vici table "tx_vici_custom_' . $tableRow['name'] . '"');
+        $this->addFlashMessage('Database schema successfully updated for VICI table "tx_vici_custom_' . $tableRow['name'] . '"');
 
         return $this->redirect('index');
     }
@@ -231,7 +231,7 @@ class ViciModuleController extends ActionController
     private function checkUserPermissions(array $tableRow): void
     {
         if (0 === $tableRow['pid'] && !$this->backendUser->isAdmin()) {
-            throw new \UnexpectedValueException('You are not allowed to edit vici table with uid=' . $tableRow['uid'] . ' on root page!');
+            throw new \UnexpectedValueException('You are not allowed to edit VICI table with uid=' . $tableRow['uid'] . ' on root page!');
         }
         if (0 !== $tableRow['pid']) {
             $pageRow = BackendUtility::getRecord('pages', $tableRow['pid']);
@@ -239,7 +239,7 @@ class ViciModuleController extends ActionController
                 $pageShow = $this->backendUser->doesUserHaveAccess($pageRow, Permission::PAGE_SHOW);
                 $pageEditContents = $this->backendUser->doesUserHaveAccess($pageRow, Permission::CONTENT_EDIT);
                 if (!$pageShow || !$pageEditContents) {
-                    throw new \UnexpectedValueException('You are not allowed to edit vici table with uid=' . $tableRow['uid'] . ' on pid=' . $pageRow['uid'] . '!');
+                    throw new \UnexpectedValueException('You are not allowed to edit VICI table with uid=' . $tableRow['uid'] . ' on pid=' . $pageRow['uid'] . '!');
                 }
             }
         }
