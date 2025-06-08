@@ -146,6 +146,15 @@ enum FieldTypes: string
                     'required' => true,
                 ],
             ],
+            'description' => [
+                'exclude' => false,
+                'label' => 'Description',
+                'description' => 'Optional description of this field.',
+                'config' => [
+                    'type' => 'user',
+                    'renderType' => 'viciTranslatableInput',
+                ],
+            ],
             'excluded' => [
                 'exclude' => false,
                 'label' => 'Exclude',

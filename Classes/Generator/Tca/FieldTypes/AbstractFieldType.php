@@ -22,7 +22,7 @@ abstract class AbstractFieldType
      */
     private string $baseTypeConfigurationAppended = <<<TXT
         --div--;Additional config,
-        additional_config
+        description,additional_config
         TXT;
 
     /**

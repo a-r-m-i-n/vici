@@ -27,6 +27,10 @@ class ColumnsGenerator extends AbstractPhpCodeGenerator
             ];
             $tca['config']['type'] = $instance->getType();
 
+            if (!empty($tableColumn['description'])) {
+                $tca['description'] = TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'description');
+            }
+
             // Translatable options
             if (!empty($this->table['enable_column_languages'])) {
                 if ($tableColumn['l10n_mode_exclude'] > 0) {
