@@ -51,6 +51,8 @@ readonly class DatabaseMigrationService
             'dropTable' => [],
         ];
         if (array_key_exists('add', $statements)) {
+            $inlineColumnsWithForeignField = $this->viciRepository->findInlineColumnsWith('foreign_field');
+            $inlineColumnsWithForeignSortby = $this->viciRepository->findInlineColumnsWith('foreign_sortby');
             foreach ($statements['add'] as $hash => $sql) {
                 if (str_contains($sql, 'tx_vici_custom_')) {
                     preg_match('/tx_vici_custom_(\w+)/', $sql, $matches);
@@ -65,7 +67,25 @@ readonly class DatabaseMigrationService
                             ];
                         }
                     }
+                } else {
+                    preg_match('/^ALTER TABLE `(.*?)` ADD `(.*?)`.*/i', $sql, $matches);
+                    if (isset($matches[1], $matches[2])) {
+                        $inlineTable = $matches[1];
+                        $inlineTableColumn = $matches[2];
 
+                        foreach (array_merge($inlineColumnsWithForeignField, $inlineColumnsWithForeignSortby) as $viciTableName => $foreignTables) {
+                            foreach ($foreignTables as $foreignTableName => $foreignFields) {
+                                if ($foreignTableName === $inlineTable && in_array($inlineTableColumn, $foreignFields, true)) {
+                                    $viciTableRow = $this->viciRepository->findTableByName($viciTableName);
+                                    $relatedStatements['addColumn'][$hash] = [
+                                        'tableUid' => $viciTableRow['uid'] ?? 0,
+                                        'tableName' => $viciTableName,
+                                        'sql' => $sql,
+                                    ];
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -213,4 +213,62 @@ class ViciRepository
 
         return $items;
     }
+
+    /**
+     * @return array<string, array<string, string[]>> Key is VICI table name, child array's key is the foreign_table with foreign_field as values
+     */
+    public function findInlineColumnsWith(string $fieldName): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_COLUMN);
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLENAME_COLUMN)
+            ->where($queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter('inline')))
+            ->andWhere($queryBuilder->expr()->neq('foreign_table', $queryBuilder->createNamedParameter('')))
+            ->andWhere($queryBuilder->expr()->neq($fieldName, $queryBuilder->createNamedParameter('')))
+        ;
+
+        $relatedTables = [];
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $columnRow) {
+            $tableRow = $this->findTableByUid($columnRow['parent']);
+            if (!isset($tableRow['name'])) {
+                continue;
+            }
+            if (!array_key_exists($tableRow['name'], $relatedTables)) {
+                $relatedTables[$tableRow['name']] = [];
+            }
+            if (!array_key_exists($columnRow['foreign_table'], $relatedTables[$tableRow['name']])) {
+                $relatedTables[$tableRow['name']][$columnRow['foreign_table']] = [];
+            }
+            $relatedTables[$tableRow['name']][$columnRow['foreign_table']][] = $columnRow[$fieldName];
+        }
+
+        return $relatedTables;
+    }
+
+    /**
+     * @return array<string, string[]>
+     */
+    public function findInlineColumnsWithForeignSortby(): array
+    {
+        $queryBuilder = $this->connectionPool->getQueryBuilderForTable(self::TABLENAME_COLUMN);
+        $queryBuilder
+            ->select('*')
+            ->from(self::TABLENAME_COLUMN)
+            ->where($queryBuilder->expr()->eq('type', $queryBuilder->createNamedParameter('inline')))
+            ->andWhere($queryBuilder->expr()->neq('foreign_table', $queryBuilder->createNamedParameter('')))
+            ->andWhere($queryBuilder->expr()->neq('foreign_field', $queryBuilder->createNamedParameter('')))
+            ->andWhere($queryBuilder->expr()->neq('foreign_sortby', $queryBuilder->createNamedParameter('')))
+        ;
+
+        $relatedTables = [];
+        foreach ($queryBuilder->executeQuery()->fetchAllAssociative() as $columnRow) {
+            if (!array_key_exists($columnRow['foreign_table'], $relatedTables)) {
+                $relatedTables[$columnRow['foreign_table']] = [];
+            }
+            $relatedTables[$columnRow['foreign_table']][] = $columnRow['foreign_sortby'];
+        }
+
+        return $relatedTables;
+    }
 }

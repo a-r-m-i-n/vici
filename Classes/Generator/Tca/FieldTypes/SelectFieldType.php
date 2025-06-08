@@ -100,7 +100,12 @@ class SelectFieldType extends AbstractFieldType
                     'itemsProcFunc' => TcaTables::class . '->get',
                     'minitems' => 1,
                 ],
-                'displayCond' => 'FIELD:select_type:=:foreign_table',
+                'displayCond' => [
+                    'OR' => [
+                        'FIELD:select_type:=:foreign_table',
+                        'FIELD:type:=:inline',
+                    ],
+                ],
             ],
             'foreign_table_where' => [
                 'exclude' => false,
@@ -144,6 +149,7 @@ class SelectFieldType extends AbstractFieldType
                     'OR' => [
                         'FIELD:select_render_type:!=:selectSingle',
                         'FIELD:type:=:group',
+                        'FIELD:type:=:inline',
                     ],
                 ],
             ],
@@ -159,6 +165,7 @@ class SelectFieldType extends AbstractFieldType
                     'OR' => [
                         'FIELD:select_render_type:!=:selectSingle',
                         'FIELD:type:=:group',
+                        'FIELD:type:=:inline',
                     ],
                 ],
             ],
@@ -201,6 +208,7 @@ class SelectFieldType extends AbstractFieldType
                     'OR' => [
                         'FIELD:select_type:=:foreign_table',
                         'FIELD:type:=:group',
+                        'FIELD:type:=:inline',
                     ],
                 ],
             ],
@@ -218,8 +226,8 @@ class SelectFieldType extends AbstractFieldType
                         'OR' => [
                             'FIELD:select_type:=:foreign_table',
                             'FIELD:type:=:group',
+                            'FIELD:type:=:inline',
                         ],
-
                         'FIELD:extbase_mapping_mode:=:models',
                     ],
                 ],
