@@ -7,6 +7,11 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 $viciRepository = GeneralUtility::makeInstance(ViciRepository::class);
 $customMappings = [];
 foreach ($viciRepository->findAllTables() as $table) {
+    $tableColumns = $viciRepository->findTableColumnsByTableUid($table['uid']);
+    if (empty($tableColumns)) {
+        continue;
+    }
+
     // TODO Hardcoded table prefix and model namespace
     $tableName = 'tx_vici_custom_' . $table['name'];
     $modelName = 'T3\\Vici\\Custom\\Domain\\Model\\' . GeneralUtility::underscoredToUpperCamelCase($table['name']);
