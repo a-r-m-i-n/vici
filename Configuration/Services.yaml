@@ -24,6 +24,9 @@ services:
     T3\Vici\Generator\Extbase\ModelClassNameResolver:
         public: true
 
+    T3\Vici\Generator\StaticValues:
+        public: true
+
     T3\Vici\Repository\ViciRepository:
         public: true
         lazy: true

@@ -1,10 +1,15 @@
 <?php
 
+use T3\Vici\Generator\StaticValues;
 use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
+/** @var StaticValues $staticValues */
+$staticValues = GeneralUtility::makeInstance(StaticValues::class);
+
 /** @var ViciRepository $viciRepository */
 $viciRepository = GeneralUtility::makeInstance(ViciRepository::class);
+
 $customMappings = [];
 foreach ($viciRepository->findAllTables() as $table) {
     $tableColumns = $viciRepository->findTableColumnsByTableUid($table['uid']);
@@ -12,9 +17,8 @@ foreach ($viciRepository->findAllTables() as $table) {
         continue;
     }
 
-    // TODO Hardcoded table prefix and model namespace
-    $tableName = 'tx_vici_custom_' . $table['name'];
-    $modelName = 'T3\\Vici\\Custom\\Domain\\Model\\' . GeneralUtility::underscoredToUpperCamelCase($table['name']);
+    $tableName = $staticValues->getFullTableName($table['name']);
+    $modelName = $staticValues->getProxyClassNamespace(GeneralUtility::underscoredToUpperCamelCase($table['name']));
     $customMappings[$modelName] = ['tableName' => $tableName];
 }
 
