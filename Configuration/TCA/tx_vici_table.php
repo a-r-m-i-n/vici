@@ -23,9 +23,8 @@ return [
         'copyAfterDuplFields' => 'columns',
     ],
     'palettes' => [
-        'general' => ['showitem' => 'name,hidden'],
+        'general' => ['showitem' => 'name,title,hidden'],
         'label' => ['showitem' => 'label,label_alt_force,--linebreak--,label_alt'],
-        'visibility' => ['showitem' => 'root_level,ignore_page_type,hide_table,'],
         'system_columns' => ['showitem' => <<<TXT
             enable_column_hidden,enable_column_deleted,--linebreak--,
             enable_column_start_end_time, enable_column_fegroup,--linebreak--,
@@ -41,12 +40,19 @@ return [
                 --div--;General,
                 --palette--;;general,
                 columns,
-                --palette--;;label,
-                --palette--;Record type visibility;visibility,
+
+                --div--;Visibility,
+                root_level,ignore_page_type,hide_table,
+
+                --div--;System columns,
                 --palette--;Enable system columns;system_columns,
 
-                --div--;Appearance,
-                title,icon,
+                --div--;Label,
+                --palette--;;label,
+
+                --div--;Table icon,
+                icon,
+
                 TXT,
         ],
     ],
