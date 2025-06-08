@@ -71,6 +71,8 @@ class ViciModuleController extends ActionController
                     $tableRow['_tcaFileStatus'] = 'ok';
                 }
                 $tableRow['_tcaExisting'] = $this->viciManager->checkIfTableIsExistingInCachedTca($tableRow);
+                $tableRow['_isComplete'] = !empty($this->viciRepository->findTableColumnsByTableUid($tableRow['uid']));
+
                 $tableRowsGroupedByPage[$indexPages]['tableRows'][$indexTableRows] = $tableRow;
             }
         }

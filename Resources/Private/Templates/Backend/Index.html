@@ -43,7 +43,14 @@
                                                     <span class="text-danger"><core:icon identifier="actions-exclamation-triangle-alt" /></span>
                                                     <f:if condition="{tableRow._tcaFileStatus} == 'missing'">
                                                         <f:then>
-                                                            TCA file is missing. Please flush all caches to regenerate TCA file.
+                                                            <f:if condition="{tableRow._isComplete}">
+                                                                <f:then>
+                                                                    TCA file is missing. Please flush all caches to regenerate TCA file.
+                                                                </f:then>
+                                                                <f:else>
+                                                                    VICI table incomplete. No active columns configured.
+                                                                </f:else>
+                                                            </f:if>
                                                         </f:then>
                                                         <f:else>
                                                             Updates to vici table missing in TCA cache. Please flush all caches to apply changes.
