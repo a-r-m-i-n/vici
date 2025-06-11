@@ -3,6 +3,8 @@
 namespace T3\Vici\Generator\Tca\FieldTypes;
 
 use T3\Vici\Generator\Extbase\PropertyValue;
+use T3\Vici\Localization\TranslationRepository;
+use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class InputFieldType extends AbstractFieldType
@@ -13,11 +15,13 @@ class InputFieldType extends AbstractFieldType
     {
         return [
             'input_min_max' => 'is_required,min,max',
+            'input_default_placeholder' => 'default,placeholder',
         ];
     }
 
     protected string $typeConfiguration = <<<TXT
-        size,default,
+        size,
+        --palette--;;input_default_placeholder,
         --div--;Field evaluation,
             --palette--;;input_min_max,
             eval,
@@ -70,6 +74,20 @@ class InputFieldType extends AbstractFieldType
                 'config' => [
                     'type' => 'input',
                     'default' => '',
+                ],
+            ],
+            'placeholder' => [
+                'exclude' => false,
+                'label' => 'Placeholder',
+                'config' => [
+                    'type' => 'user',
+                    'renderType' => 'viciTranslatableInput',
+                ],
+                'displayCond' => [
+                    'OR' => [
+                        'FIELD:type:=:input',
+                        'FIELD:text_type:IN:normal,rte',
+                    ],
                 ],
             ],
 
@@ -196,6 +214,10 @@ class InputFieldType extends AbstractFieldType
 
         if (!empty($tableColumn['default'])) {
             $tcaConfig['default'] = $tableColumn['default'];
+        }
+
+        if (!empty($tableColumn['placeholder'])) {
+            $tcaConfig['placeholder'] = TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'placeholder');
         }
 
         return $tcaConfig;

@@ -3,6 +3,8 @@
 namespace T3\Vici\Generator\Tca\FieldTypes;
 
 use T3\Vici\Generator\Extbase\PropertyValue;
+use T3\Vici\Localization\TranslationRepository;
+use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TextFieldType extends AbstractFieldType
@@ -16,12 +18,13 @@ class TextFieldType extends AbstractFieldType
             'text_min_max' => 'is_required,text_min,text_max',
             'text_cols_rows' => 'rows,cols',
             'text_appearance' => 'fixed_font,enable_tab',
+            'text_default_placeholder' => 'text_default,placeholder',
         ];
     }
 
     protected string $typeConfiguration = <<<TXT
         --palette--;;text_type_options,
-        text_default,
+        --palette--;;text_default_placeholder,
         --palette--;;text_cols_rows,
         --palette--;;text_appearance,
         --div--;Field evaluation,
@@ -259,9 +262,15 @@ class TextFieldType extends AbstractFieldType
             if (!empty($tableColumn['enable_tab'])) {
                 $tcaConfig['enableTabulator'] = true;
             }
+            if (!empty($tableColumn['placeholder'])) {
+                $tcaConfig['placeholder'] = TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'placeholder');
+            }
         } elseif ('rte' === $tableColumn['text_type']) {
             $tcaConfig['enableRichtext'] = true;
             $tcaConfig['richtextConfiguration'] = empty($tableColumn['rte_preset']) ? 'default' : $tableColumn['rte_preset'];
+            if (!empty($tableColumn['placeholder'])) {
+                $tcaConfig['placeholder'] = TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'placeholder');
+            }
         } elseif ('code' === $tableColumn['text_type']) {
             $tcaConfig['renderType'] = 'codeEditor';
             if (!empty($tableColumn['code_format']) && 'none' !== $tableColumn['code_format']) {

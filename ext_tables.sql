@@ -7,7 +7,8 @@ CREATE TABLE tx_vici_table
 CREATE TABLE tx_vici_table_column
 (
     title varchar(255) DEFAULT '' NOT NULL,
-    description text
+    description text,
+    placeholder text
 );
 
 CREATE TABLE tx_vici_table_column_item
