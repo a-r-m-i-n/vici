@@ -25,7 +25,7 @@ class ColumnsGenerator extends AbstractPhpCodeGenerator
                 'label' => TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'title'),
                 'config' => $instance->buildTcaConfig($tableColumn),
             ];
-            $tca['config']['type'] = $instance->getType();
+            $tca['config']['type'] = $instance->getType($tableColumn);
 
             if (!empty($tableColumn['description'])) {
                 $tca['description'] = TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'description');

@@ -15,7 +15,7 @@ class SelectFieldType extends AbstractFieldType
     public function getTypePalettes(): array
     {
         return [
-            'select_types' => 'select_type,select_render_type',
+            'select_types' => 'select_type,select_render_type,use_radio',
             'select_default_min_max_items' => 'default,select_minitems,select_maxitems,add_empty_option,select_required',
             'select_foreign_table' => 'foreign_table,foreign_table_where',
         ];
@@ -28,6 +28,22 @@ class SelectFieldType extends AbstractFieldType
         --palette--;;select_default_min_max_items,
         --div--;Extbase,extbase_mapping_mode,extbase_model_class
         TXT;
+
+    /**
+     * @param array<string, mixed>|null $tableColumn
+     */
+    public function getType(?array $tableColumn = null): string
+    {
+        if (!$tableColumn) {
+            return parent::getType();
+        }
+
+        if ('selectSingle' === $tableColumn['select_render_type'] && 'manual' === $tableColumn['select_type'] && $tableColumn['use_radio']) {
+            return 'radio';
+        }
+
+        return 'select';
+    }
 
     /**
      * @return array<string, array<string, mixed>> New columns for field type
@@ -90,6 +106,20 @@ class SelectFieldType extends AbstractFieldType
                 'onChange' => 'reload',
             ],
 
+            'use_radio' => [
+                'exclude' => false,
+                'label' => 'Use radio buttons',
+                'description' => 'When enabled, instead of a select box a list of radio buttons are displayed.',
+                'config' => [
+                    'type' => 'check',
+                ],
+                'displayCond' => [
+                    'AND' => [
+                        'FIELD:select_type:=:manual',
+                        'FIELD:select_render_type:=:selectSingle',
+                    ],
+                ],
+            ],
             'foreign_table' => [
                 'exclude' => false,
                 'label' => 'Foreign table',
@@ -286,6 +316,10 @@ class SelectFieldType extends AbstractFieldType
             if (!empty($tableColumn['foreign_table_where'])) {
                 $tcaConfig['foreign_table_where'] = $tableColumn['foreign_table_where'];
             }
+        }
+
+        if ('selectSingle' === $tableColumn['select_render_type'] && 'manual' === $tableColumn['select_type'] && $tableColumn['use_radio']) {
+            unset($tcaConfig['renderType']);
         }
 
         return $tcaConfig;

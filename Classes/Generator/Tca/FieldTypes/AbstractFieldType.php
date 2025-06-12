@@ -30,7 +30,10 @@ abstract class AbstractFieldType
      */
     protected string $typeConfiguration = '';
 
-    public function getType(): string
+    /**
+     * @param array<string, mixed>|null $tableColumn
+     */
+    public function getType(?array $tableColumn = null): string
     {
         $identifier = preg_replace('/.*\\\\(.*?)FieldType$/', '$1', get_class($this));
 
