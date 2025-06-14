@@ -16,6 +16,17 @@ class GroupFieldType extends AbstractFieldType
         return 'select';
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => ['select'],
+        ];
+    }
+
     public function getTypePalettes(): array
     {
         return [

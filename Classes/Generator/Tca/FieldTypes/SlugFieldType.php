@@ -15,6 +15,17 @@ class SlugFieldType extends AbstractFieldType
         return 'input_more';
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => ['link'],
+            'after' => [],
+        ];
+    }
+
     protected string $typeConfiguration = <<<TXT
         fields, field_separator, fallback_character, eval_slug
         TXT;

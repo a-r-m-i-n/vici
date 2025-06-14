@@ -4,6 +4,7 @@ namespace T3\Vici\Generator\Tca\FieldTypes;
 
 use T3\Vici\UserFunction\TcaFieldValidator\LeadingLetterValidator;
 use T3\Vici\UserFunction\TcaFieldValidator\ReservedTcaColumnsValidator;
+use TYPO3\CMS\Core\Service\DependencyOrderingService;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 enum FieldTypes: string
@@ -249,15 +250,26 @@ enum FieldTypes: string
     {
         $items = [];
         foreach (self::list() as $fieldType) {
-            $items[] = [
+            $type = $fieldType->getType();
+            $items[$type] = [
                 'label' => $fieldType->getLabel(),
-                'value' => $fieldType->getType(),
+                'value' => $type,
                 'icon' => $fieldType->getIconClass(),
                 'group' => $fieldType->getGroup(),
+                '_before' => $fieldType->getOrdering()['before'],
+                '_after' => $fieldType->getOrdering()['after'],
             ];
         }
 
-        return $items;
+        /** @var DependencyOrderingService $dependencyOrderingService */
+        $dependencyOrderingService = GeneralUtility::makeInstance(DependencyOrderingService::class);
+        $items = $dependencyOrderingService->orderByDependencies($items, '_before', '_after');
+
+        foreach ($items as $item) {
+            unset($item['_before'], $item['_after']);
+        }
+
+        return array_values($items);
     }
 
     /**

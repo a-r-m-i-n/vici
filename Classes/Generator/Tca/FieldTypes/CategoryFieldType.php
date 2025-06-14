@@ -15,6 +15,17 @@ class CategoryFieldType extends AbstractFieldType
         return 'select';
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => ['inline', 'group'],
+        ];
+    }
+
     public function getTypePalettes(): array
     {
         return [

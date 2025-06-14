@@ -21,6 +21,17 @@ class CheckFieldType extends AbstractFieldType
         return 'input';
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => ['text'],
+        ];
+    }
+
     public function getTypePalettes(): array
     {
         return [

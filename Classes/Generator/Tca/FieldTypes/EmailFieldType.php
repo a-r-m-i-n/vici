@@ -19,6 +19,17 @@ class EmailFieldType extends InputFieldType
         return [];
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => ['datetime'],
+        ];
+    }
+
     protected string $typeConfiguration = <<<TXT
         size,
         placeholder,

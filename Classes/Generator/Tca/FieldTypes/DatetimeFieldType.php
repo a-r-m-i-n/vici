@@ -14,6 +14,17 @@ class DatetimeFieldType extends AbstractFieldType
         return 'input_more';
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => ['link'],
+        ];
+    }
+
     public function getTypePalettes(): array
     {
         return [

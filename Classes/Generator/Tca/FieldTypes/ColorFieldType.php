@@ -19,6 +19,17 @@ class ColorFieldType extends InputFieldType
         return 'input_more';
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => ['email'],
+        ];
+    }
+
     public function getTypePalettes(): array
     {
         return [];

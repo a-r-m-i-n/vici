@@ -53,6 +53,17 @@ abstract class AbstractFieldType
         return ucfirst($this->getType());
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => [],
+        ];
+    }
+
     public function getIconClass(): string
     {
         return $this->iconClass;

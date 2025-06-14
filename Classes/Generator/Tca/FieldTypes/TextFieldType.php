@@ -16,6 +16,17 @@ class TextFieldType extends AbstractFieldType
         return 'input';
     }
 
+    /**
+     * @return array{before: string[], after: string[]}
+     */
+    public function getOrdering(): array
+    {
+        return [
+            'before' => [],
+            'after' => ['input'],
+        ];
+    }
+
     public function getTypePalettes(): array
     {
         return [
