@@ -185,6 +185,10 @@ class SelectFieldType extends AbstractFieldType
                         'FIELD:select_render_type:!=:selectSingle',
                         'FIELD:type:=:group',
                         'FIELD:type:=:inline',
+                        'AND' => [
+                            'FIELD:type:=:category',
+                            'FIELD:cat_rel:!=:oneToOne',
+                        ],
                     ],
                 ],
             ],
@@ -201,6 +205,10 @@ class SelectFieldType extends AbstractFieldType
                         'FIELD:select_render_type:!=:selectSingle',
                         'FIELD:type:=:group',
                         'FIELD:type:=:inline',
+                        'AND' => [
+                            'FIELD:type:=:category',
+                            'FIELD:cat_rel:!=:oneToOne',
+                        ],
                     ],
                 ],
             ],

@@ -115,8 +115,17 @@ class InputFieldType extends AbstractFieldType
                 ],
                 'displayCond' => [
                     'OR' => [
-                        'FIELD:is_nullable:=:0',
+                        'AND' => [
+                            'FIELD:type:IN:input,link',
+                            'FIELD:is_nullable:=:0',
+                        ],
                         'FIELD:type:=:number',
+                        'OR' => [
+                            'AND' => [
+                                'FIELD:type:=:category',
+                                'FIELD:cat_rel:=:oneToOne',
+                            ],
+                        ],
                     ],
                 ],
             ],
