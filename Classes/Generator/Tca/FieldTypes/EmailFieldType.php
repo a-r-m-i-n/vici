@@ -9,6 +9,11 @@ class EmailFieldType extends InputFieldType
 {
     protected string $iconClass = 'actions-envelope';
 
+    public function getGroup(): string
+    {
+        return 'input_more';
+    }
+
     public function getTypePalettes(): array
     {
         return [];

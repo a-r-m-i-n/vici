@@ -12,7 +12,7 @@ class SlugFieldType extends AbstractFieldType
 
     public function getGroup(): string
     {
-        return 'input';
+        return 'input_more';
     }
 
     protected string $typeConfiguration = <<<TXT

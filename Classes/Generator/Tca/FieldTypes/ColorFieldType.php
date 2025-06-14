@@ -9,6 +9,16 @@ class ColorFieldType extends InputFieldType
 {
     protected string $iconClass = 'actions-brush';
 
+    public function getLabel(): string
+    {
+        return 'Color picker';
+    }
+
+    public function getGroup(): string
+    {
+        return 'input_more';
+    }
+
     public function getTypePalettes(): array
     {
         return [];

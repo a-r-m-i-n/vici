@@ -11,7 +11,7 @@ class DatetimeFieldType extends AbstractFieldType
 
     public function getGroup(): string
     {
-        return 'input';
+        return 'input_more';
     }
 
     public function getTypePalettes(): array

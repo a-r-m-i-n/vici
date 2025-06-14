@@ -266,7 +266,8 @@ enum FieldTypes: string
     private static function listTypeItemGroups(): array
     {
         return [
-            'input' => 'Inputs',
+            'input' => 'Basic inputs',
+            'input_more' => 'More inputs',
             'select' => 'Selections & Relations',
             'media' => 'Media',
             'misc' => 'Miscellaneous',
