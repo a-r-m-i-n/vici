@@ -40,19 +40,21 @@
                                             <f:then>
                                                 <f:variable name="showCacheNotice">1</f:variable>
                                                 <p class="my-0">
-                                                    <span class="text-danger"><core:icon identifier="actions-exclamation-triangle-alt" /></span>
                                                     <f:if condition="{tableRow._tcaFileStatus} == 'missing'">
                                                         <f:then>
                                                             <f:if condition="{tableRow._isComplete}">
                                                                 <f:then>
+                                                                    <span class="text-danger"><core:icon identifier="actions-exclamation-triangle-alt" /></span>
                                                                     TCA file is missing. Please flush all caches to regenerate TCA file.
                                                                 </f:then>
                                                                 <f:else>
-                                                                    VICI table incomplete. No active columns configured.
+                                                                    <span class="text-muted"><core:icon identifier="actions-ban" /></span>
+                                                                    <span class="text-muted">VICI table incomplete. No active columns configured.</span>
                                                                 </f:else>
                                                             </f:if>
                                                         </f:then>
                                                         <f:else>
+                                                            <span class="text-danger"><core:icon identifier="actions-exclamation-triangle-alt" /></span>
                                                             Updates to VICI table missing in TCA cache. Please flush all caches to apply changes.
                                                         </f:else>
                                                     </f:if>
@@ -61,13 +63,12 @@
                                             <f:else>
                                                 <f:if condition="{tableRow._necessaryDatabaseCompareChanges}">
                                                     <f:then>
-                                                        <p class="my-0">
-                                                            <f:if condition="{tableRow._necessaryDatabaseCompareChanges -> f:count()} == 1">
-                                                                <f:then>There is <strong class="text-danger">one necessary change</strong> in database structure missing.</f:then>
-                                                                <f:else>There are <strong class="text-danger">{tableRow._necessaryDatabaseCompareChanges -> f:count()} necessary changes</strong> in database structure missing.</f:else>
-                                                            </f:if>
-                                                        </p>
-                                                        <f:link.action action="showDatabaseChanges" class="btn btn-sm btn-default mt-1" arguments="{tableUid: tableRow.uid}">
+                                                        <span class="text-danger"><core:icon identifier="actions-exclamation-triangle-alt" /></span>
+                                                        <f:if condition="{tableRow._necessaryDatabaseCompareChanges -> f:count()} == 1">
+                                                            <f:then>There is <strong class="text-danger">one necessary change</strong> in database structure missing.</f:then>
+                                                            <f:else>There are <strong class="text-danger">{tableRow._necessaryDatabaseCompareChanges -> f:count()} necessary changes</strong> in database structure missing.</f:else>
+                                                        </f:if>
+                                                        <f:link.action action="showDatabaseChanges" class="btn btn-sm btn-default ms-2" arguments="{tableUid: tableRow.uid}">
                                                             <core:icon identifier="actions-database-reload" />
                                                             See details and apply changes
                                                         </f:link.action>
