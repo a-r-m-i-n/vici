@@ -174,7 +174,7 @@ class SelectFieldType extends AbstractFieldType
             ],
             'select_minitems' => [
                 'exclude' => false,
-                'label' => 'Minimum amount selected items',
+                'label' => 'Minimum amount of selected items',
                 'config' => [
                     'type' => 'number',
                     'size' => 15,
