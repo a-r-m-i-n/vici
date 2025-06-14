@@ -49,6 +49,7 @@ $newColumns = [
     ],
     'tx_vici_template' => [
         'label' => 'VICI template',
+        'l10n_mode' => 'exclude',
         'config' => [
             'type' => 'text',
             'renderType' => 'codeEditor',
@@ -57,6 +58,7 @@ $newColumns = [
     ],
     'tx_vici_template_detail' => [
         'label' => 'VICI detail template',
+        'l10n_mode' => 'exclude',
         'config' => [
             'type' => 'text',
             'renderType' => 'codeEditor',
