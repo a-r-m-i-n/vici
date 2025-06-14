@@ -10,6 +10,11 @@ class InlineFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'actions-form-insert-after';
 
+    public function getGroup(): string
+    {
+        return 'select';
+    }
+
     public function getTypePalettes(): array
     {
         return [

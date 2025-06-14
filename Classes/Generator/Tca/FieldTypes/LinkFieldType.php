@@ -10,6 +10,11 @@ class LinkFieldType extends InputFieldType
 {
     protected string $iconClass = 'actions-link';
 
+    public function getGroup(): string
+    {
+        return 'input';
+    }
+
     public function getTypePalettes(): array
     {
         return [

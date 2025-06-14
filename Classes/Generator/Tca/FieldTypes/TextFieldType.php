@@ -11,6 +11,11 @@ class TextFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'form-textarea';
 
+    public function getGroup(): string
+    {
+        return 'input';
+    }
+
     public function getTypePalettes(): array
     {
         return [

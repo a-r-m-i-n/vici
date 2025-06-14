@@ -133,6 +133,7 @@ enum FieldTypes: string
                     'type' => 'select',
                     'renderType' => 'selectSingle',
                     'items' => self::listTypeSelectItems(),
+                    'itemGroups' => self::listTypeItemGroups(),
                     'default' => 'input',
                 ],
             ],
@@ -242,9 +243,9 @@ enum FieldTypes: string
     }
 
     /**
-     * @return array<int, array{label: string, value: string, icon: string}>
+     * @return array<int, array{label: string, value: string, icon: string, group: string}>
      */
-    public static function listTypeSelectItems(): array
+    private static function listTypeSelectItems(): array
     {
         $items = [];
         foreach (self::list() as $fieldType) {
@@ -252,9 +253,23 @@ enum FieldTypes: string
                 'label' => $fieldType->getLabel(),
                 'value' => $fieldType->getType(),
                 'icon' => $fieldType->getIconClass(),
+                'group' => $fieldType->getGroup(),
             ];
         }
 
         return $items;
+    }
+
+    /**
+     * @return array<string, string> Key is group key, value is the group label
+     */
+    private static function listTypeItemGroups(): array
+    {
+        return [
+            'input' => 'Inputs',
+            'select' => 'Selections & Relations',
+            'media' => 'Media',
+            'misc' => 'Miscellaneous',
+        ];
     }
 }

@@ -10,6 +10,11 @@ class SlugFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'form-url';
 
+    public function getGroup(): string
+    {
+        return 'input';
+    }
+
     protected string $typeConfiguration = <<<TXT
         fields, field_separator, fallback_character, eval_slug
         TXT;

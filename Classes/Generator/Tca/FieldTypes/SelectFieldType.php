@@ -12,6 +12,11 @@ class SelectFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'form-single-select';
 
+    public function getGroup(): string
+    {
+        return 'select';
+    }
+
     public function getTypePalettes(): array
     {
         return [

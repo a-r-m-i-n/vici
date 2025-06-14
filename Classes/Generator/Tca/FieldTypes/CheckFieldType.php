@@ -11,6 +11,11 @@ class CheckFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'form-checkbox';
 
+    public function getGroup(): string
+    {
+        return 'input';
+    }
+
     public function getTypePalettes(): array
     {
         return [

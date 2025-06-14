@@ -40,6 +40,14 @@ abstract class AbstractFieldType
         return lcfirst($identifier ?? '');
     }
 
+    /**
+     * @see FieldTypes::listTypeItemGroups
+     */
+    public function getGroup(): string
+    {
+        return 'misc';
+    }
+
     public function getLabel(): string
     {
         return ucfirst($this->getType());

@@ -11,6 +11,11 @@ class InputFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'form-text';
 
+    public function getGroup(): string
+    {
+        return 'input';
+    }
+
     public function getTypePalettes(): array
     {
         return [

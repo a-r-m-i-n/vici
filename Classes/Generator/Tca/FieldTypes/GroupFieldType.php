@@ -11,6 +11,11 @@ class GroupFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'content-listgroup';
 
+    public function getGroup(): string
+    {
+        return 'select';
+    }
+
     public function getTypePalettes(): array
     {
         return [

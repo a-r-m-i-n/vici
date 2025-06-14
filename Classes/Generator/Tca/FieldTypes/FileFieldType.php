@@ -10,6 +10,11 @@ class FileFieldType extends AbstractFieldType
 {
     protected string $iconClass = 'form-file-upload';
 
+    public function getGroup(): string
+    {
+        return 'media';
+    }
+
     public function getTypePalettes(): array
     {
         return [
