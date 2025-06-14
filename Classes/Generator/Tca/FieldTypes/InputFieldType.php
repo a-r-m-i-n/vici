@@ -113,7 +113,12 @@ class InputFieldType extends AbstractFieldType
                     'type' => 'check',
                     'default' => 0,
                 ],
-                'displayCond' => 'FIELD:is_nullable:=:0',
+                'displayCond' => [
+                    'OR' => [
+                        'FIELD:is_nullable:=:0',
+                        'FIELD:type:=:number',
+                    ],
+                ],
             ],
             'eval' => [
                 'exclude' => false,
