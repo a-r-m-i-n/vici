@@ -116,7 +116,7 @@ class InputFieldType extends AbstractFieldType
                 'displayCond' => [
                     'OR' => [
                         'AND' => [
-                            'FIELD:type:IN:input,link',
+                            'FIELD:type:IN:input,link,email',
                             'FIELD:is_nullable:=:0',
                         ],
                         'FIELD:type:=:number',
@@ -132,6 +132,7 @@ class InputFieldType extends AbstractFieldType
             'eval' => [
                 'exclude' => false,
                 'label' => 'Eval',
+                'description' => 'Defines field validation rules.',
                 'config' => [
                     'type' => 'select',
                     'renderType' => 'selectMultipleSideBySide',
