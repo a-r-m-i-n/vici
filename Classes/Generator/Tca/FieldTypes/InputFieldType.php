@@ -23,6 +23,7 @@ class InputFieldType extends AbstractFieldType
         size,
         --palette--;;input_default_placeholder,
         --div--;Field evaluation,
+            is_nullable,
             --palette--;;input_min_max,
             eval,
             is_in
@@ -90,7 +91,16 @@ class InputFieldType extends AbstractFieldType
                     ],
                 ],
             ],
-
+            'is_nullable' => [
+                'exclude' => false,
+                'label' => 'Is nullable',
+                'description' => 'If enabled, a checkbox is displayed right to the input field to set the value to NULL.',
+                'config' => [
+                    'type' => 'check',
+                    'default' => 0,
+                ],
+                'onChange' => 'reload',
+            ],
             'is_required' => [
                 'exclude' => false,
                 'label' => 'Is required',
@@ -98,6 +108,7 @@ class InputFieldType extends AbstractFieldType
                     'type' => 'check',
                     'default' => 0,
                 ],
+                'displayCond' => 'FIELD:is_nullable:=:0',
             ],
             'eval' => [
                 'exclude' => false,
@@ -197,7 +208,9 @@ class InputFieldType extends AbstractFieldType
                 $tcaConfig['is_in'] = $tableColumn['is_in'];
             }
         }
-        if (!empty($tableColumn['is_required'])) {
+        if (!empty($tableColumn['is_nullable'])) {
+            $tcaConfig['nullable'] = true;
+        } elseif (!empty($tableColumn['is_required'])) {
             $tcaConfig['required'] = true;
         }
 
@@ -227,6 +240,11 @@ class InputFieldType extends AbstractFieldType
     {
         $name = GeneralUtility::underscoredToLowerCamelCase($tableColumn['name']);
 
-        return new PropertyValue($name, 'string', false, $tableColumn['default'] ?? '');
+        return new PropertyValue(
+            $name,
+            'string',
+            !empty($tableColumn['is_nullable']),
+            !empty($tableColumn['is_nullable']) ? null : ($tableColumn['default'] ?? '')
+        );
     }
 }
