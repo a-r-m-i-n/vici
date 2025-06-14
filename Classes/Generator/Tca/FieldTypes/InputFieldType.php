@@ -116,7 +116,7 @@ class InputFieldType extends AbstractFieldType
                 'displayCond' => [
                     'OR' => [
                         'AND' => [
-                            'FIELD:type:IN:input,link,email',
+                            'FIELD:type:IN:input,link,email,color',
                             'FIELD:is_nullable:=:0',
                         ],
                         'FIELD:type:=:number',

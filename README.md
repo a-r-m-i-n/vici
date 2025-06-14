@@ -15,6 +15,6 @@ No programming skills are required.
 
 ## Development Roadmap
 
-* [ ] Field types implementation
+* [ ] Additional configuration (type: json) for table config
 * [ ] Translations (in TCA)
 * [ ] Configurable Palettes and Types
