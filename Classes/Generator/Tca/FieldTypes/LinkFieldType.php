@@ -260,6 +260,8 @@ class LinkFieldType extends InputFieldType
             $tcaConfig['appearance'] = $appearance;
         }
 
+        $tcaConfig['softref'] = 'typolink';
+
         return $tcaConfig;
     }
 }

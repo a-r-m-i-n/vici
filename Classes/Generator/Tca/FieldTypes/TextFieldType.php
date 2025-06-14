@@ -276,11 +276,13 @@ class TextFieldType extends AbstractFieldType
             if (!empty($tableColumn['placeholder'])) {
                 $tcaConfig['placeholder'] = TranslationRepository::getLL(ViciRepository::TABLENAME_COLUMN, $tableColumn['uid'], 'placeholder');
             }
+            $tcaConfig['softref'] = 'typolink_tag,email[subst],url';
         } elseif ('code' === $tableColumn['text_type']) {
             $tcaConfig['renderType'] = 'codeEditor';
             if (!empty($tableColumn['code_format']) && 'none' !== $tableColumn['code_format']) {
                 $tcaConfig['format'] = $tableColumn['code_format'];
             }
+            $tcaConfig['softref'] = 'email[subst],url[subst]';
         } elseif ('table' === $tableColumn['text_type']) {
             $tcaConfig['renderType'] = 'textTable';
             if (!empty($tableColumn['text_max'])) {
