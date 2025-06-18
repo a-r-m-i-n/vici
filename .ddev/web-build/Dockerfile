@@ -10,10 +10,7 @@ RUN echo "<li><h2>TYPO3 13.4 LTS</h2><a href="https://v13.${DDEV_SITENAME}.ddev.
 RUN echo "</ul>" >> /var/www/html/index.html
 RUN echo "<hr>" >> /var/www/html/index.html
 RUN echo "<h3>TYPO3 Backend</h3><ul><li><b>User:</b> <code>admin</code></li><li><b>Password:</b> <code>Password:joh316</code> (also Install Tool)</li></ul>" >> /var/www/html/index.html
-RUN echo "<hr>" >> /var/www/html/index.html
-RUN echo "<h3>Documentation</h3><ul><li>First, perform <code>$ ddev docs</code> on CLI</li><li><b>Then visit URL:</b> https://docs.${DDEV_SITENAME}.ddev.site/</li></ul>" >> /var/www/html/index.html
 RUN echo "</body></html>" >> /var/www/html/index.html
-
 
 RUN mkdir -p /var/www/html/v13/public/typo3
 RUN echo "<h1>Perform this first</h1> <code>ddev install-v13</code>" > /var/www/html/v13/public/index.html

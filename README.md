@@ -13,8 +13,16 @@ No programming skills are required.
 * TYPO3 13.4 LTS
 
 
+## Documentation
+
++++ Work in progress +++
+
+[Go to documentation](docs/index.md)
+
+
 ## Development Roadmap
 
 * [ ] Additional configuration (type: json) for table config
+* [ ] Documentation
 * [ ] Translations (in TCA)
 * [ ] Configurable Palettes and Types
