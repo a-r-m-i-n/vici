@@ -4,6 +4,7 @@ namespace T3\Vici\EventListener;
 
 use T3\Vici\Repository\ViciRepository;
 use TYPO3\CMS\Core\Attribute\AsEventListener;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 
 #[AsEventListener(
@@ -11,13 +12,21 @@ use TYPO3\CMS\Core\Database\Event\AlterTableDefinitionStatementsEvent;
 )]
 readonly class AlterTableDefinitionStatementsEventListener
 {
-    public function __construct(private ViciRepository $viciRepository)
+    public function __construct(private ViciRepository $viciRepository, private ConnectionPool $connectionPool)
     {
-
     }
 
     public function __invoke(AlterTableDefinitionStatementsEvent $event): void
     {
+        $connection = $this->connectionPool->getConnectionForTable(ViciRepository::TABLENAME_COLUMN);
+        $schemaManager = $connection->createSchemaManager();
+        if (!$schemaManager->tableExists(ViciRepository::TABLENAME_TABLE)
+            || !$schemaManager->tableExists(ViciRepository::TABLENAME_COLUMN)
+            || !$schemaManager->tableExists(ViciRepository::TABLENAME_ITEM)
+        ) {
+            return;
+        }
+
         $sortby = $this->viciRepository->findInlineColumnsWithForeignSortby();
         foreach ($sortby as $tablename => $columns) {
             $columnsSql = [];
