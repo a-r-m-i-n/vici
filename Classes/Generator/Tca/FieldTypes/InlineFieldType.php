@@ -2,12 +2,14 @@
 
 namespace T3\Vici\Generator\Tca\FieldTypes;
 
-use T3\Vici\Generator\Extbase\ModelClassNameResolver;
 use T3\Vici\Generator\Extbase\PropertyValue;
+use T3\Vici\Generator\Extbase\RelationFieldTypeTrait;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class InlineFieldType extends AbstractFieldType
 {
+    use RelationFieldTypeTrait;
+
     protected string $iconClass = 'actions-form-insert-after';
 
     public function getGroup(): string
@@ -86,42 +88,21 @@ class InlineFieldType extends AbstractFieldType
     public function buildExtbaseModelProperty(array $tableColumn): PropertyValue
     {
         $name = GeneralUtility::underscoredToLowerCamelCase($tableColumn['name']);
+        $relationField = $tableColumn['foreign_table'];
 
         $mappingMode = $tableColumn['extbase_mapping_mode'];
-
         $isMultiple = true;
         if (1 === $tableColumn['select_maxitems']) {
             $isMultiple = false;
         }
 
-        if ('models' === $mappingMode && !empty($tableColumn['foreign_table'])) {
-            if (!empty($tableColumn['extbase_model_class'])) {
-                $fqcn = '\\' . ltrim($tableColumn['extbase_model_class'], '\\');
-                if (class_exists($fqcn)) {
-                    return new PropertyValue($name, $fqcn, false, null, $isMultiple);
-                }
-            }
-
-            /** @var ModelClassNameResolver $resolver */
-            $resolver = GeneralUtility::makeInstance(ModelClassNameResolver::class);
-            $fqcn = $resolver->getExtbaseModelByTablename($tableColumn['foreign_table']);
-            if ($fqcn) {
-                return new PropertyValue($name, '\\' . $fqcn, false, null, $isMultiple);
-            }
-            // Fallback
-            $mappingMode = 'arrays';
-        }
-
-        if ('arrays' === $mappingMode) {
-            $phpdoc = 'string[]';
-            if ($isMultiple) {
-                $phpdoc = 'array<int, ' . $phpdoc . '>';
-            }
-
-            return new PropertyValue($name, ['array', $phpdoc], false, []);
-        }
-
-        // Raw
-        return new PropertyValue($name, 'string', false, $tableColumn['default'] ?? '');
+        return $this->createRelationPropertyValue(
+            $name,
+            $relationField,
+            $mappingMode,
+            $tableColumn['extbase_model_class'],
+            $isMultiple,
+            $tableColumn['default']
+        );
     }
 }

@@ -51,9 +51,13 @@ readonly class AfterObjectThawedEventListener
                         $rawValues = GeneralUtility::trimExplode(',', $object->_record[$tableColumn['name']] ?? '', true);
                         $propertyName = GeneralUtility::underscoredToLowerCamelCase($tableColumn['name']);
                         $foreignTable = $tableColumn['foreign_table'] ?? $tableColumn['group_allowed'];
-                        $foreignTableArray = GeneralUtility::trimExplode(',', $foreignTable, true);
+                        $foreignTableArray = GeneralUtility::trimExplode(',', $foreignTable ?? '', true);
                         if ('select' === $tableColumn['type'] && 'manual' === $tableColumn['select_type']) {
-                            $object->$propertyName = $rawValues;
+                            if (!$this->isMultiple($tableColumn)) {
+                                $object->$propertyName = $object->_record[$tableColumn['name']] ?? '';
+                            } else {
+                                $object->$propertyName = $rawValues;
+                            }
                         } elseif (!empty($foreignTable) && 1 === count($foreignTableArray)) {
                             if (('models' === $tableColumn['extbase_mapping_mode'])) {
                                 if (!empty($tableColumn['extbase_model_class'])) {
@@ -85,15 +89,7 @@ readonly class AfterObjectThawedEventListener
                                 }
                             }
 
-                            $isMultiple = 'selectSingle' !== $tableColumn['select_render_type'];
-                            if ('group' === $tableColumn['type']) {
-                                $isMultiple = true;
-                            }
-                            if ($isMultiple && 1 === $tableColumn['select_maxitems']) {
-                                $isMultiple = false;
-                            }
-
-                            if (!$isMultiple) {
+                            if (!$this->isMultiple($tableColumn)) {
                                 // Only get first item
                                 $rows = reset($rows) ?: [];
                             }
@@ -118,15 +114,7 @@ readonly class AfterObjectThawedEventListener
                                 }
                             }
 
-                            $isMultiple = 'selectSingle' !== $tableColumn['select_render_type'];
-                            if ('group' === $tableColumn['type']) {
-                                $isMultiple = true;
-                            }
-                            if ($isMultiple && 1 === $tableColumn['select_maxitems']) {
-                                $isMultiple = false;
-                            }
-
-                            if (!$isMultiple) {
+                            if (!$this->isMultiple($tableColumn)) {
                                 // Only get first item
                                 $rows = reset($rows) ?: [];
                             }
@@ -137,5 +125,21 @@ readonly class AfterObjectThawedEventListener
                 }
             }
         }
+    }
+
+    /**
+     * @param array<string, mixed> $tableColumn
+     */
+    private function isMultiple(array $tableColumn): bool
+    {
+        $isMultiple = 'selectSingle' !== $tableColumn['select_render_type'];
+        if (in_array($tableColumn['type'], ['group', 'inline'], true)) {
+            $isMultiple = true;
+        }
+        if ($isMultiple && 1 === $tableColumn['select_maxitems']) {
+            $isMultiple = false;
+        }
+
+        return $isMultiple;
     }
 }

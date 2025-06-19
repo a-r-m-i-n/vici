@@ -2,13 +2,15 @@
 
 namespace T3\Vici\Generator\Tca\FieldTypes;
 
-use T3\Vici\Generator\Extbase\ModelClassNameResolver;
 use T3\Vici\Generator\Extbase\PropertyValue;
+use T3\Vici\Generator\Extbase\RelationFieldTypeTrait;
 use T3\Vici\UserFunction\ItemsProcFunc\TcaTables;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class GroupFieldType extends AbstractFieldType
 {
+    use RelationFieldTypeTrait;
+
     protected string $iconClass = 'content-listgroup';
 
     public function getGroup(): string
@@ -144,7 +146,8 @@ class GroupFieldType extends AbstractFieldType
     public function buildExtbaseModelProperty(array $tableColumn): PropertyValue
     {
         $name = GeneralUtility::underscoredToLowerCamelCase($tableColumn['name']);
-        $allowed = GeneralUtility::trimExplode(',', $tableColumn['group_allowed'], true);
+        $relationField = $tableColumn['group_allowed'];
+        $allowed = GeneralUtility::trimExplode(',', $relationField, true);
 
         $mappingMode = $tableColumn['extbase_mapping_mode'];
         if ('models' === $mappingMode && count($allowed) > 1) {
@@ -156,34 +159,13 @@ class GroupFieldType extends AbstractFieldType
             $isMultiple = false;
         }
 
-        if ('models' === $mappingMode) {
-            if (!empty($tableColumn['extbase_model_class'])) {
-                $fqcn = '\\' . ltrim($tableColumn['extbase_model_class'], '\\');
-                if (class_exists($fqcn)) {
-                    return new PropertyValue($name, $fqcn, false, null, $isMultiple);
-                }
-            }
-
-            /** @var ModelClassNameResolver $resolver */
-            $resolver = GeneralUtility::makeInstance(ModelClassNameResolver::class);
-            $fqcn = $resolver->getExtbaseModelByTablename($tableColumn['group_allowed']);
-            if ($fqcn) {
-                return new PropertyValue($name, '\\' . $fqcn, false, null, $isMultiple);
-            }
-            // Fallback
-            $mappingMode = 'arrays';
-        }
-
-        if ('arrays' === $mappingMode) {
-            $phpdoc = 'string[]';
-            if ($isMultiple) {
-                $phpdoc = 'array<int, ' . $phpdoc . '>';
-            }
-
-            return new PropertyValue($name, ['array', $phpdoc], false, []);
-        }
-
-        // Raw
-        return new PropertyValue($name, 'string', false, $tableColumn['default'] ?? '');
+        return $this->createRelationPropertyValue(
+            $name,
+            $relationField,
+            $mappingMode,
+            $tableColumn['extbase_model_class'],
+            $isMultiple,
+            $tableColumn['default']
+        );
     }
 }
