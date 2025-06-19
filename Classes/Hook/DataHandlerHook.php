@@ -83,6 +83,12 @@ class DataHandlerHook implements SingletonInterface
                 $resolvedUid = $this->resolveUid($parsedIdentifier['uid'], $parsedIdentifier['tableName'], $status, $dataHandler);
                 $identifier = TranslationRepository::getIdentifier($parsedIdentifier['tableName'], $resolvedUid, $parsedIdentifier['fieldName']);
             }
+
+            $parsedIdentifier = TranslationRepository::parseIdentifier($identifier);
+            if (empty($parsedIdentifier['uid'])) {
+                continue;
+            }
+
             foreach ($values as $languageKey => $value) {
                 $this->translationRepository->save($identifier, $languageKey, $value);
             }
