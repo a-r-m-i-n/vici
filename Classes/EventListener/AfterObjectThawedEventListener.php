@@ -3,6 +3,7 @@
 namespace T3\Vici\EventListener;
 
 use Doctrine\DBAL\ParameterType;
+use T3\Vici\Generator\Extbase\ModelClassNameResolver;
 use T3\Vici\Generator\StaticValues;
 use T3\Vici\Model\GenericViciModel;
 use T3\Vici\Repository\ViciRepository;
@@ -20,6 +21,7 @@ readonly class AfterObjectThawedEventListener
         private ViciRepository $viciRepository,
         private StaticValues $staticValues,
         private ConnectionPool $connectionPool,
+        private ModelClassNameResolver $classNameResolver,
     ) {
     }
 
@@ -53,10 +55,18 @@ readonly class AfterObjectThawedEventListener
                         if ('select' === $tableColumn['type'] && 'manual' === $tableColumn['select_type']) {
                             $object->$propertyName = $rawValues;
                         } elseif (!empty($foreignTable) && 1 === count($foreignTableArray)) {
-                            if (('models' === $tableColumn['extbase_mapping_mode']) && !empty($tableColumn['extbase_model_class'])) {
-                                $fqcn = '\\' . ltrim($tableColumn['extbase_model_class'], '\\');
-                                if (class_exists($fqcn)) {
-                                    continue;
+                            if (('models' === $tableColumn['extbase_mapping_mode'])) {
+                                if (!empty($tableColumn['extbase_model_class'])) {
+                                    $fqcn = '\\' . ltrim($tableColumn['extbase_model_class'], '\\');
+                                    if (class_exists($fqcn)) {
+                                        continue;
+                                    }
+                                } else {
+                                    // When "extbase_model_class" is empty (which stands for "auto")
+                                    $fqcn = $this->classNameResolver->getExtbaseModelByTablename($foreignTable);
+                                    if (!empty($fqcn) && class_exists($fqcn)) {
+                                        continue;
+                                    }
                                 }
                             }
 
